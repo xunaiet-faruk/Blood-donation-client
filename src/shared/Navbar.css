@@ -1,0 +1,33 @@
+.menu a {
+    position: relative;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+
+.menu a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: #B32346;
+    transition: width 0.3s ease;
+}
+
+.menu a.active {
+    color: #B32346;
+    font-weight: bold;
+}
+
+.menu a.active::after {
+    width: 100%;
+}
+
+.menu a {
+    transition: all 0.3s ease;
+}
+
+.menu a.active {
+    transform: translateY(-2px);
+}
