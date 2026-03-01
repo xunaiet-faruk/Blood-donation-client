@@ -8,6 +8,8 @@ import Home from "../component/Homepages/Home";
 import Error from "../shared/Error";
 import Login from "../Authentication/Resgister/Login";
 import Register from "../Authentication/Resgister/Register";
+import Donationrequest from "../component/Homepages/DonationRequests/Donationrequest";
+import Privateroute from "./Privateroute";
 
 
  export const router = createBrowserRouter([
@@ -27,6 +29,10 @@ import Register from "../Authentication/Resgister/Register";
             {
                 path:"login",
                 element:<Login/>
+            },
+            {
+                path:"donation-requests",
+                element: <Privateroute><Donationrequest /></Privateroute>
             }
         ]
     },

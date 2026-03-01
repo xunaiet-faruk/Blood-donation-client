@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css'
 import PrimaryButton from './PrimaryButton';
 import { Authcontext } from '../Authentication/Context/Authcontext';
+import { FaUser } from 'react-icons/fa';
 const Navbar = () => {
     const { user, logout } = use(Authcontext)
 
@@ -17,7 +18,7 @@ const Navbar = () => {
     <NavLink to={'/'}>
         Home
     </NavLink>
-    <NavLink to={'/request'}>
+        <NavLink to={'/donation-requests'}>
             Donation Requests
     </NavLink>
     <NavLink to={'/funding'}>
@@ -40,7 +41,7 @@ const Navbar = () => {
                         </ul>
                     </div>
                     <Link to={"/"}>
-                    <img src="/logo.png" alt="Logo" className="w-[60px]" />
+                    <img src="/logo.png" alt="Logo" className="w-15" />
                     </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex ">
@@ -49,28 +50,45 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    {
-                        user?
-                           
-                                // <PrimaryButton onClick={handleLogout} text={'Sign Out'} />
-                            <div className="dropdown dropdown-end ">
-                                <div tabIndex={0} role="button" className="btn m-1 bg-white border-0 rounded-full p-0">
-                                    <img src={user.photoURL} alt="User Avatar" className="w-16 rounded-full" />
-                                </div>
-                                <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                    <li><button className='text-red-700 hover:bg-[#B32346] hover:text-white' onClick={handleLogout}>Logout</button></li>
-                                    <li><button className=' hover:bg-[#B32346] hover:text-white' >Dashboard</button></li>
-                                    
-                                </ul>
+                    {user ? (
+                        <div className="dropdown dropdown-end">
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                className="btn m-1 bg-white border-0 rounded-full p-0"
+                            >
+                                <img
+                                    src={
+                                        user?.photoURL ||
+                                        user?.providerData?.[0]?.photoURL ||
+                                        user?.reloadUserInfo?.photoUrl ||
+                                        '/default-avatar.png'
+                                    }
+                                    alt="User Avatar"
+                                    className="w-16 rounded-full"
+                                />
                             </div>
-                                
-                            
-
-                            :
-                            <Link to={'/login'}>
-                                <PrimaryButton text={'Sign In'} />
-                            </Link>
-                    }
+                            <ul className="dropdown-content menu bg-base-100 rounded-box z-50 w-52 p-2 shadow-sm">
+                                <li>
+                                    <button
+                                        className="text-red-700 hover:bg-[#B32346] hover:text-white"
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </button>
+                                </li>
+                                <li>
+                                    <button className="hover:bg-[#B32346] hover:text-white">
+                                        Dashboard
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    ) : (
+                        <Link to={"/login"}>
+                            <PrimaryButton text={"Sign In"} />
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>

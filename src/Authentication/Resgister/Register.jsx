@@ -4,8 +4,6 @@ import { FaUser, FaEnvelope, FaLock, FaPhone, FaTint, FaGoogle } from "react-ico
 import { Link } from "react-router-dom";
 import { Authcontext } from "../Context/Authcontext";
 import Swal from "sweetalert2";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../firebase";
 import { FcGoogle } from "react-icons/fc";
 
 const Register = memo(() => {
@@ -45,6 +43,7 @@ const Register = memo(() => {
             .then((result) => {
 
                 updateUser(result.user.displayName, result.user.photoURL)
+                result.user.reload() 
                     .then(() => {
                         Swal.fire({
                             title: "Signed in with Google!",
