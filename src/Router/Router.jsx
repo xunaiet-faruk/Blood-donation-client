@@ -6,6 +6,8 @@ import {
 import Mainlayout from "../layout/Mainlayout";
 import Home from "../component/Homepages/Home";
 import Error from "../shared/Error";
+import Login from "../Authentication/Resgister/Login";
+import Register from "../Authentication/Resgister/Register";
 
 
  export const router = createBrowserRouter([
@@ -17,6 +19,14 @@ import Error from "../shared/Error";
             {
                 index:true,
                 Component:Home
+            },
+            {
+                path:"register",
+                element:<Register/>
+            },
+            {
+                path:"login",
+                element:<Login/>
             }
         ]
     },

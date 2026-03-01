@@ -1,18 +1,27 @@
-import React from 'react';
+import React, { use } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css'
 import PrimaryButton from './PrimaryButton';
+import { Authcontext } from '../Authentication/Context/Authcontext';
 const Navbar = () => {
+    const { user, logout } = use(Authcontext)
+
+    const handleLogout = () => {
+        logout()
+            .then(() => {       
+            })
+    }          
+
     const menuItems = <>
     
     <NavLink to={'/'}>
         Home
     </NavLink>
-    <NavLink to={'/fda'}>
-        About
+    <NavLink to={'/request'}>
+            Donation Requests
     </NavLink>
-    <NavLink to={'/dasf'}>
-        Home
+    <NavLink to={'/funding'}>
+            Funding Links
     </NavLink>
     
     </>
@@ -40,9 +49,28 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to={'/'}>
-                    <PrimaryButton text={'Sign In'}/>
-                    </Link>
+                    {
+                        user?
+                           
+                                // <PrimaryButton onClick={handleLogout} text={'Sign Out'} />
+                            <div className="dropdown dropdown-end ">
+                                <div tabIndex={0} role="button" className="btn m-1 bg-white border-0 rounded-full p-0">
+                                    <img src={user.photoURL} alt="User Avatar" className="w-16 rounded-full" />
+                                </div>
+                                <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                    <li><button className='text-red-700 hover:bg-[#B32346] hover:text-white' onClick={handleLogout}>Logout</button></li>
+                                    <li><button className=' hover:bg-[#B32346] hover:text-white' >Dashboard</button></li>
+                                    
+                                </ul>
+                            </div>
+                                
+                            
+
+                            :
+                            <Link to={'/login'}>
+                                <PrimaryButton text={'Sign In'} />
+                            </Link>
+                    }
                 </div>
             </div>
         </div>
