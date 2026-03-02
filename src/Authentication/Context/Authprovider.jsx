@@ -38,10 +38,13 @@ const Authprovider = ({children}) => {
         return unsubscribe;
     },[])
 
-    const updateUser = (name, photo) => {
+    const updateUser = (name, photo, group, upazila, district) => {
         return updateProfile(auth.currentUser,{
             displayName: name,
-            photoURL: photo 
+            photoURL: photo ,
+            group: group,
+            upazila: upazila,
+            district: district
         })
    
     }
