@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaEye, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaEdit, FaTrash, FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 
 // Function to get badge color based on status
 const statusColor = (status) => {
@@ -126,14 +127,15 @@ const MyDonationRequests = () => {
                                         </span>
                                     </td>
 
+
                                     <td className="p-3 flex justify-center gap-2">
                                         {/* View icon */}
                                         <div className="relative group">
                                             <button className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
-                                                <i className="fas fa-eye"></i>
+                                                <FaEye />
                                             </button>
                                             <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-gray-800 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                <i className="fas fa-info-circle"></i>
+                                                <FaInfoCircle />
                                                 View Details
                                             </span>
                                         </div>
@@ -146,16 +148,16 @@ const MyDonationRequests = () => {
                                                         Done
                                                     </button>
                                                     <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-green-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <i className="fas fa-check-circle"></i>
+                                                        <FaCheckCircle />
                                                         Mark as Done
                                                     </span>
                                                 </div>
                                                 <div className="relative group">
-                                                    <button className="px-2 py-1 rounded bg-red-200 text-red-800 text-sm hover:bg-red-300 transition ">
+                                                    <button className="px-2 py-1 rounded bg-red-200 text-red-800 text-sm hover:bg-red-300 transition">
                                                         Cancel
                                                     </button>
                                                     <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-red-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <i className="fas fa-times-circle"></i>
+                                                        <FaTimesCircle />
                                                         Cancel Request
                                                     </span>
                                                 </div>
@@ -164,19 +166,19 @@ const MyDonationRequests = () => {
                                             <>
                                                 <div className="relative group">
                                                     <button className="p-2 rounded-full bg-blue-200 hover:bg-blue-300 transition">
-                                                        <i className="fas fa-edit"></i>
+                                                        <FaEdit />
                                                     </button>
                                                     <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-blue-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <i className="fas fa-pencil-alt"></i>
+                                                        <FaPencilAlt />
                                                         Edit Request
                                                     </span>
                                                 </div>
                                                 <div className="relative group">
                                                     <button className="p-2 rounded-full bg-red-200 hover:bg-red-300 transition">
-                                                        <i className="fas fa-trash"></i>
+                                                        <FaTrash />
                                                     </button>
                                                     <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-red-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <i className="fas fa-trash-alt"></i>
+                                                        <FaTrashAlt />
                                                         Delete Request
                                                     </span>
                                                 </div>

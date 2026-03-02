@@ -8,6 +8,7 @@ import Donationrequest from "../component/Homepages/DonationRequests/Donationreq
 import Privateroute from "./Privateroute";
 import DasboardLayout from "../Dashboard/DasboardLayout";
 import Dasboard from "../Dashboard/Dasboard";
+import Profile from "../Dashboard/Profile";
 
 export const router = createBrowserRouter([
     {
@@ -49,7 +50,15 @@ export const router = createBrowserRouter([
                         <Donationrequest />
                     </Privateroute>
                 )
-            }
+            },
+            {
+                path: "/dashboard/profile",
+                element: (
+                    <Privateroute>
+                        <Profile />
+                    </Privateroute>
+                )
+            },
 
         ]
     }
