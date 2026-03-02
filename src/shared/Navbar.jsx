@@ -1,5 +1,5 @@
 import React, { use } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link,  NavLink } from 'react-router-dom';
 import './Navbar.css'
 import PrimaryButton from './PrimaryButton';
 import { Authcontext } from '../Authentication/Context/Authcontext';
@@ -78,9 +78,11 @@ const Navbar = () => {
                                     </button>
                                 </li>
                                 <li>
-                                    <button className="hover:bg-[#B32346] hover:text-white">
+
+
+                                    <Link to="/dashboard" className="hover:bg-[#B32346] hover:text-white">
                                         Dashboard
-                                    </button>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
