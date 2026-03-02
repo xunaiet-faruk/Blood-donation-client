@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaEye, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaEdit, FaTrash, FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
+                                    import {FaEye, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaEdit, FaTrash, FaPencilAlt, FaTrashAlt} from 'react-icons/fa';
 
 // Function to get badge color based on status
 const statusColor = (status) => {

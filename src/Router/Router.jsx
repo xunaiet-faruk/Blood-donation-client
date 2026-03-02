@@ -9,6 +9,8 @@ import Privateroute from "./Privateroute";
 import DasboardLayout from "../Dashboard/DasboardLayout";
 import Dasboard from "../Dashboard/Dasboard";
 import Profile from "../Dashboard/Profile";
+import Alluser from "../Dashboard/AdminDashboard/Alluser";
+import CreateDonation from "../Dashboard/DonarDashboard/CreateDonation";
 
 export const router = createBrowserRouter([
     {
@@ -56,6 +58,22 @@ export const router = createBrowserRouter([
                 element: (
                     <Privateroute>
                         <Profile />
+                    </Privateroute>
+                )
+            },
+            {
+                path: "/dashboard/allusers",
+                element: (
+                    <Privateroute>
+                        <Alluser />
+                    </Privateroute>
+                )
+            },
+            {
+                path: "/dashboard/create-donation-request",
+                element: (
+                    <Privateroute>
+                        <CreateDonation />
                     </Privateroute>
                 )
             },
