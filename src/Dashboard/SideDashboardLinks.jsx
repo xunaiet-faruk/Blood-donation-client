@@ -29,7 +29,7 @@ const SideDashboardLinks = () => {
     return (
         <>
             {/* Topbar for mobile */}
-            <div className="lg:hidden flex justify-between items-center p-4 shadow-md bg-white fixed w-full z-40">
+            <div className="lg:hidden flex justify-between items-center p-4  bg-white shadow-2xl fixed w-full z-40">
                 <button onClick={() => setOpen(true)} className="text-2xl text-[#B32346]">
                     <FaBars />
                 </button>
