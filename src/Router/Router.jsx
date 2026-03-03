@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
                     <Privateroute>
                         <Profile />
                     </Privateroute>
-                )
+                ),
             },
             {
                 path: "/dashboard/allusers",

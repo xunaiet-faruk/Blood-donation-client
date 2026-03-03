@@ -1,35 +1,86 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
 import PrimaryButton from "../shared/PrimaryButton";
+import { Authcontext } from "../Authentication/Context/Authcontext";
+import Useaxios from "../Hooks/Useaxios";
+import Swal from "sweetalert2";
 
-// Fake profile data
-const fakeProfile = {
-    id: 1,
-    name: "Rahim Uddin",
-    email: "rahim@example.com",
-    bloodGroup: "A+",
-    district: "Dhaka",
-    upazila: "Dhanmondi",
-    avatar: "https://lh3.googleusercontent.com/a/ACg8ocI1btkq3f_B_6TEEHn9FNiaWvuf4CxslzzzINJ7GK3PqV1QrtU=s96-c",
-};
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const districts = ["Dhaka", "Chattogram", "Rajshahi", "Khulna"];
 const upazilas = ["Dhanmondi", "Halishahar", "Boalia", "Sonadanga"];
 
 const Profile = () => {
-    const [profile, setProfile] = useState(fakeProfile);
+    const { user } = useContext(Authcontext);
+    const [profile, setProfile] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const axios = Useaxios();
+
+    const fetchProfile = async () => {
+        if (!user?.email) return;
+        try {
+            setLoading(true);
+            const response = await axios.get(`/register/${user.email}`);
+            console.log("User data from API:", response.data);
+            setProfile(response.data);
+        } catch (error) {
+            console.error("Error fetching user:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProfile();
+    }, [user?.email]);
 
     const handleChange = (e) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
     };
 
-    const handleSave = () => {
-        // এখানে আপনি server এ POST/PUT request পাঠাতে পারেন
-        console.log("Saved profile:", profile);
-        setEditMode(false);
+    const handleSave = async () => {
+        try {
+            setSaving(true);
+
+           const result = await axios.put(`/register/${user?.email}`, profile);
+            console.log("Update result:", result.data);
+            await fetchProfile();
+            setEditMode(false);
+            Swal.fire({
+                title: "Success!",
+                text: "Profile updated successfully",
+                icon: "success",
+                timer: 1500,
+                showConfirmButton: false,
+                position: "top-end",
+                toast: true
+            });
+
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            Swal.fire({
+                title: "Error!",
+                text: "Failed to update profile. Please try again.",
+                icon: "error",
+                timer: 2000,
+                showConfirmButton: false,
+                position: "top-end",
+                toast: true
+            });
+        } finally {
+            setSaving(false);
+        }
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex justify-center items-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B32346]"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="p-6 lg:p-10 min-h-screen bg-gray-50 flex justify-center items-start">
@@ -51,18 +102,94 @@ const Profile = () => {
                     className="absolute -bottom-20 -right-20 w-72 h-72 bg-[#B32346]/10 rounded-full blur-3xl"
                 />
 
+                {profile?.status === "active" ? (
+                    <div className="absolute top-4 right-4 z-20">
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.02, 1],
+                            }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                repeatType: "loop"
+                            }}
+                            className="relative"
+                        >
+                            <div className="flex items-center gap-1.5 bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1.5 rounded-full shadow-lg">
+                                <motion.div
+                                    animate={{
+                                        scale: [1, 1.3, 1],
+                                        opacity: [1, 0.7, 1]
+                                    }}
+                                    transition={{
+                                        duration: 1.5,
+                                        repeat: Infinity,
+                                        repeatType: "loop"
+                                    }}
+                                    className="w-2 h-2 bg-white rounded-full"
+                                />
+                                <span className="font-semibold text-xs tracking-wider">ACTIVE</span>
+                                <motion.div
+                                    animate={{ rotate: 360 }}
+                                    transition={{
+                                        duration: 2,
+                                        repeat: Infinity,
+                                        ease: "linear"
+                                    }}
+                                    className="w-3 h-3 border border-white rounded-full border-t-transparent"
+                                />
+                            </div>
+                            <motion.div
+                                animate={{
+                                    scale: [1, 1.1, 1],
+                                    opacity: [0.3, 0.5, 0.3]
+                                }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity
+                                }}
+                                className="absolute inset-0 bg-green-400 rounded-full blur-md -z-10"
+                            />
+                        </motion.div>
+                    </div>
+                ) : (
+                    <div className="absolute top-4 right-4 z-20">
+                        <motion.div
+                            animate={{
+                                opacity: [0.7, 1, 0.7],
+                            }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                repeatType: "loop"
+                            }}
+                            className="relative"
+                        >
+                                <div className="flex items-center gap-1.5 bg-gradient-to-r from-[#B32346] to-[#c31d47] text-white px-3 py-1.5 rounded-full shadow-lg">
+                                <div className="w-2 h-2 bg-gray-200 rounded-full" />
+                                <span className="font-semibold text-xs tracking-wider">Block</span>
+                                <div className="w-3 h-3 border border-gray-200 rounded-full" />
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+
+
                 <div className="relative z-10 flex flex-col items-center">
-                    {/* Avatar */}
+                    {/* Avatar -from profile */}
                     <img
-                        src={profile.avatar}
-                        alt="avatar"
-                        className="w-32 h-32 rounded-full border-4 border-[#B32346] shadow-lg mb-6"
+                        src={profile?.photo || user?.photoURL || "https://via.placeholder.com/150"}
+                        alt={profile?.name || "User avatar"}
+                        className="w-32 h-32 rounded-full border-4 border-[#B32346] shadow-lg mb-6 object-cover"
+                        onError={(e) => {
+                            e.target.src = "https://via.placeholder.com/150";
+                        }}
                     />
 
                     {/* Form */}
                     <div className="w-full">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Name */}
+                            {/* Name -*/}
                             <div>
                                 <label className="text-gray-700 font-semibold mb-1 block">
                                     Name
@@ -70,7 +197,7 @@ const Profile = () => {
                                 <input
                                     type="text"
                                     name="name"
-                                    value={profile.name}
+                                    value={profile?.name || user?.displayName || ""}
                                     disabled={!editMode}
                                     onChange={handleChange}
                                     className={`w-full px-4 py-2 rounded-lg border ${editMode
@@ -80,27 +207,45 @@ const Profile = () => {
                                 />
                             </div>
 
-                            {/* Email */}
+                            {/* Email -*/}
                             <div>
                                 <label className="text-gray-700 font-semibold mb-1 block">
                                     Email
                                 </label>
                                 <input
                                     type="email"
-                                    value={profile.email}
+                                    name="email"
+                                    value={profile?.email || user?.email || ""}
                                     disabled
                                     className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 cursor-not-allowed"
                                 />
                             </div>
+                            <div>
+                                <label className="text-gray-700 font-semibold mb-1 block">
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={profile?.phone || ""}
+                                    disabled={!editMode}
+                                    onChange={handleChange}
+                                    placeholder="Enter phone number"
+                                    className={`w-full px-4 py-2 rounded-lg border ${editMode
+                                            ? "border-[#B32346] bg-white"
+                                            : "border-gray-300 bg-gray-100"
+                                        } focus:outline-none focus:ring-2 focus:ring-[#B32346] transition`}
+                                />
+                            </div>
 
-                            {/* Blood Group */}
+                            {/* Blood Group -*/}
                             <div>
                                 <label className="text-gray-700 font-semibold mb-1 block">
                                     Blood Group
                                 </label>
                                 <select
                                     name="bloodGroup"
-                                    value={profile.bloodGroup}
+                                    value={profile?.bloodGroup || ""}
                                     disabled={!editMode}
                                     onChange={handleChange}
                                     className={`w-full px-4 py-2 rounded-lg border ${editMode
@@ -108,6 +253,7 @@ const Profile = () => {
                                             : "border-gray-300 bg-gray-100"
                                         } focus:outline-none focus:ring-2 focus:ring-[#B32346] transition`}
                                 >
+                                    <option value="">Select Blood Group</option>
                                     {bloodGroups.map((bg) => (
                                         <option key={bg} value={bg}>
                                             {bg}
@@ -116,14 +262,14 @@ const Profile = () => {
                                 </select>
                             </div>
 
-                            {/* District */}
+                      
                             <div>
                                 <label className="text-gray-700 font-semibold mb-1 block">
                                     District
                                 </label>
                                 <select
                                     name="district"
-                                    value={profile.district}
+                                    value={profile?.district || ""}
                                     disabled={!editMode}
                                     onChange={handleChange}
                                     className={`w-full px-4 py-2 rounded-lg border ${editMode
@@ -131,6 +277,7 @@ const Profile = () => {
                                             : "border-gray-300 bg-gray-100"
                                         } focus:outline-none focus:ring-2 focus:ring-[#B32346] transition`}
                                 >
+                                    <option value="">Select District</option>
                                     {districts.map((d) => (
                                         <option key={d} value={d}>
                                             {d}
@@ -139,14 +286,14 @@ const Profile = () => {
                                 </select>
                             </div>
 
-                            {/* Upazila */}
+                            {/* Upazila -*/}
                             <div>
                                 <label className="text-gray-700 font-semibold mb-1 block">
                                     Upazila
                                 </label>
                                 <select
                                     name="upazila"
-                                    value={profile.upazila}
+                                    value={profile?.upazila || ""}
                                     disabled={!editMode}
                                     onChange={handleChange}
                                     className={`w-full px-4 py-2 rounded-lg border ${editMode
@@ -154,12 +301,28 @@ const Profile = () => {
                                             : "border-gray-300 bg-gray-100"
                                         } focus:outline-none focus:ring-2 focus:ring-[#B32346] transition`}
                                 >
+                                    <option value="">Select Upazila</option>
                                     {upazilas.map((u) => (
                                         <option key={u} value={u}>
                                             {u}
                                         </option>
                                     ))}
                                 </select>
+                            </div>
+
+                           
+
+                            {/* Member Since -*/}
+                            <div>
+                                <label className="text-gray-700 font-semibold mb-1 block">
+                                    Member Since
+                                </label>
+                                <input
+                                    type="text"
+                                    value={profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : "N/A"}
+                                    disabled
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 cursor-not-allowed"
+                                />
                             </div>
                         </div>
 
@@ -168,17 +331,30 @@ const Profile = () => {
                             {!editMode ? (
                                 <button
                                     onClick={() => setEditMode(true)}
-                                    className="hover:bg-[#B32346] border-b border-[#B32346] hover:text-white cursor-pointer px-8 py-2 rounded-xl text-md shadow-2xl font-semibold hover:bg-red-600 transition"
+                                    className="bg-[#B32346] text-white cursor-pointer px-8 py-2 rounded-xl text-md shadow-lg font-semibold hover:bg-[#8f1b38] transition"
                                 >
-                                    Edit
+                                    Edit Profile
                                 </button>
                             ) : (
-                                <PrimaryButton text={"save"}
-                                    onClick={handleSave}
-                                    className="bg-green-500 cursor-pointer text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition"
-                                >
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => {
+                                            setEditMode(false);
                                     
-                                </PrimaryButton>
+                                            fetchProfile();
+                                        }}
+                                        className="bg-gray-500 text-white cursor-pointer px-6 py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <PrimaryButton
+                                        text={saving ? "Saving..." : "Save Changes"}
+                                        onClick={handleSave}
+                                        disabled={saving}
+                                        className={`bg-green-500 cursor-pointer text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition ${saving ? "opacity-50 cursor-not-allowed" : ""
+                                            }`}
+                                    />
+                                </div>
                             )}
                         </div>
                     </div>

@@ -33,7 +33,7 @@ const Dasboard = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowCongrats(false);
-        }, 2000);
+        }, 1800);
 
         return () => clearTimeout(timer);
     }, []);

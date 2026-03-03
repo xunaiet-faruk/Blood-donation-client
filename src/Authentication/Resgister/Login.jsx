@@ -31,18 +31,18 @@ const Login = memo(() => {
 
 
     
-        const handleGoogleSignIn = () => {
+        // const handleGoogleSignIn = () => {
            
-            google()
-                .then((result) => {
-                    Swal.fire({
-                        title: "Signed in with Google!",
-                        icon: "success",
-                        draggable: true
-                    });
-                })
-                .catch((error) => console.error("Google Sign-In error:", error));
-        };
+        //     google()
+        //         .then((result) => {
+        //             Swal.fire({
+        //                 title: "Signed in with Google!",
+        //                 icon: "success",
+        //                 draggable: true
+        //             });
+        //         })
+        //         .catch((error) => console.error("Google Sign-In error:", error));
+        // };
     return (
         <section className="min-h-screen flex items-center justify-center overflow-hidden">
             <form onSubmit={handleLogin} className="w-full flex justify-center">
@@ -95,7 +95,7 @@ const Login = memo(() => {
                             Login
                         </motion.button>
 
-                          <motion.button
+                          {/* <motion.button
                                                     type="button"
                                                     onClick={handleGoogleSignIn}
                                                     whileHover={{ scale: 1.05 }}
@@ -103,7 +103,7 @@ const Login = memo(() => {
                                                     className="w-full cursor-pointer flex items-center justify-center gap-2  bg-[#B32346] text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-2xl transition duration-300"
                                                 >
                                                     <FcGoogle /> Login with Google
-                                                </motion.button>
+                             </motion.button> */}
 
                         <p className="text-gray-500 text-sm text-center mt-1">
                             Don't have an account?{" "}
