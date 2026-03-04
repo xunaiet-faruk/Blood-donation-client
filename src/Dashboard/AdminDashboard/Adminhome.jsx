@@ -1,8 +1,9 @@
-
 import React, { use, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Authcontext } from "../Authentication/Context/Authcontext";
-
+import { Authcontext } from "../../Authentication/Context/Authcontext";
+import AdminDashbordOverview from "./AdminDashbordOverview";
+import Useaxios from "../../Hooks/Useaxios";
+import AdminanalysisChart from "./AdminanalysisChart";
 
 const statusColor = (status) => {
     switch (status) {
@@ -25,18 +26,73 @@ const cardVariants = {
     hover: { scale: 1.05, rotate: 1, y: -5 },
 };
 
-const Dasboard = () => {
+const Adminhome = () => {
     const [requests, setRequests] = useState([]);
     const { user } = use(Authcontext);
-    const [showCongrats, setShowCongrats] = useState(true);
+    const [showCongrats, setShowCongrats] = useState(false); // Initially false
+    const [startCountUp, setStartCountUp] = useState(false);
+    const axios = Useaxios();
+    const [stats, setStats] = useState({
+        totalDonors: 0,
+        totalRequests: 0,
+        pending: 0,
+        inprogress: 0,
+        done: 0,
+        canceled: 0,
+    });
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowCongrats(false);
-        }, 1800);
+        const fetchStats = async () => {
+            try {
+                const res = await axios.get("http://localhost:5000/blood-request");
+                const allRequests = res.data;
+                const totalRequests = allRequests.length;
+                const pending = allRequests.filter(r => r.status === "pending").length;
+                const inprogress = allRequests.filter(r => r.status === "inprogress").length;
+                const done = allRequests.filter(r => r.status === "done").length;
+                const canceled = allRequests.filter(r => r.status === "canceled").length;
+                const donorsSet = new Set(allRequests.map(r => r.email));
+                const totalDonors = donorsSet.size;
 
-        return () => clearTimeout(timer);
+                setStats({
+                    totalDonors,
+                    totalRequests,
+                    pending,
+                    inprogress,
+                    done,
+                    canceled
+                });
+
+            } catch (error) {
+                console.error("Error fetching blood requests:", error);
+            }
+        };
+
+        fetchStats();
     }, []);
+
+    useEffect(() => {
+        // Check if user has seen the congratulation message before
+        const hasSeenCongrats = localStorage.getItem(`hasSeenCongrats_${user?.email}`);
+
+        if (!hasSeenCongrats && user) {
+            // If user hasn't seen it, show the animation
+            setShowCongrats(true);
+
+            // Set timer to hide animation
+            const timer = setTimeout(() => {
+                setShowCongrats(false);
+                setStartCountUp(true);
+                // Store in localStorage that user has seen it
+                localStorage.setItem(`hasSeenCongrats_${user?.email}`, 'true');
+            }, 1800);
+
+            return () => clearTimeout(timer);
+        } else {
+            // If user has seen it before, directly start countup
+            setStartCountUp(true);
+        }
+    }, [user]);
 
     useEffect(() => {
         fetch("/Recentdonation.json")
@@ -44,9 +100,13 @@ const Dasboard = () => {
             .then((data) => setRequests(data))
             .catch((err) => console.error("Failed to load data:", err));
     }, []);
+
     return (
         <div>
-            <div className="p-6 lg:p-10  min-h-screen">
+            {/* Pass startCountUp prop to AdminDashbordOverview */}
+            <AdminDashbordOverview stats={stats} startCountUp={startCountUp} />
+
+            <div className="p-6 lg:p-10">
                 {showCongrats && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -55,7 +115,6 @@ const Dasboard = () => {
                         transition={{ duration: 0.4 }}
                         className="fixed inset-0 z-50 flex items-center justify-center bg-white"
                     >
-                        {/* Animated Background SVG Burst */}
                         <motion.svg
                             className="absolute w-[600px] h-[600px] opacity-20"
                             viewBox="0 0 200 200"
@@ -120,6 +179,7 @@ const Dasboard = () => {
                         ))}
                     </motion.div>
                 )}
+
                 {/* Welcome Section */}
                 <motion.div
                     initial={{ opacity: 0, y: -30 }}
@@ -134,8 +194,6 @@ const Dasboard = () => {
                         Here are your 3 most recent donation requests.
                     </p>
                 </motion.div>
-
-
 
                 {/* Recent Donation Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -196,8 +254,10 @@ const Dasboard = () => {
                     ))}
                 </div>
             </div>
+
+            <AdminanalysisChart stats={stats} />
         </div>
     );
 };
 
-export default Dasboard;
+export default Adminhome;

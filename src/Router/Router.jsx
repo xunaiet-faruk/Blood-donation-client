@@ -7,10 +7,10 @@ import Register from "../Authentication/Resgister/Register";
 import Donationrequest from "../component/Homepages/DonationRequests/Donationrequest";
 import Privateroute from "./Privateroute";
 import DasboardLayout from "../Dashboard/DasboardLayout";
-import Dasboard from "../Dashboard/Dasboard";
 import Profile from "../Dashboard/Profile";
 import Alluser from "../Dashboard/AdminDashboard/Alluser";
 import CreateDonation from "../Dashboard/DonarDashboard/CreateDonation";
+import Adminhome from "../Dashboard/AdminDashboard/Adminhome";
 
 export const router = createBrowserRouter([
     {
@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Dasboard />
+                element: <Privateroute><Adminhome /></Privateroute>
             },
             {
                 path: "/dashboard/donation-requests",
@@ -76,7 +76,8 @@ export const router = createBrowserRouter([
                         <CreateDonation />
                     </Privateroute>
                 )
-            },
+            }
+           
 
         ]
     }
