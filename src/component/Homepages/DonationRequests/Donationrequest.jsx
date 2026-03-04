@@ -26,6 +26,7 @@ const MyDonationRequests = () => {
     const [requests, setRequests] = useState([]);
     const [filter, setFilter] = useState("all");
     const [currentPage, setCurrentPage] = useState(1);
+    const [editingRequest, setEditingRequest] = useState(null);
     const requestsPerPage = 5;
 
     useEffect(() => {
@@ -78,6 +79,31 @@ const MyDonationRequests = () => {
             });
         }
     };
+
+    const handleEditRequest = (req) => {
+        if (user.role === "donor" && req.status !== "pending") {
+            Swal.fire({ title: "Cannot Edit", text: "You can only edit your pending requests.", icon: "warning", timer: 2500, showConfirmButton: false });
+            return;
+        }
+        setEditingRequest(req);
+    }
+
+    const handleSaveEdit = async (updatedData) => {
+        try{
+            const response =await axios.put(`/blood-request/${editingRequest._id}`,{
+                ...updatedData,
+                userEmail: user.email,
+                userRole: user.role
+            })
+            setRequests(requests.map(r => r._id === editingRequest._id ? response.data.data || { ...r, ...updatedData } : r));
+            setEditingRequest(null);
+            Swal.fire({ title: "Updated!", text: "Donation request updated successfully", icon: "success", timer: 2000, showConfirmButton: false });
+        } catch (error) {
+            Swal.fire({ title: "Error!", text: error.response?.data?.message || "Could not update request", icon: "error", showConfirmButton: true });
+        }
+        
+    }
+
 
     // Filtered requests
     const filteredRequests =
@@ -180,7 +206,7 @@ const MyDonationRequests = () => {
                                             {/* View icon */}
                                             <div className="relative group">
                                                 <button
-                                                    onClick={() => handleViewDetails(req)}
+                                                    onClick={() => handleViewDetails(req._id)}
                                                     className="p-2 cursor-pointer rounded-full bg-gray-200 hover:bg-gray-300 transition"
                                                 >
                                                     <FaEye />
@@ -260,6 +286,57 @@ const MyDonationRequests = () => {
                         </AnimatePresence>
                     </tbody>
                 </table>
+
+                {editingRequest && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded-xl w-full max-w-md relative">
+                            <h2 className="text-xl font-bold mb-4">Edit Request</h2>
+                            <form onSubmit={(e) => {
+                                e.preventDefault(); handleSaveEdit({
+                                    bloodGroup: e.target.bloodGroup.value,
+                                    recipientDistrict: e.target.recipientDistrict.value,
+                                    recipientUpazila: e.target.recipientUpazila.value,
+                                    hospitalName: e.target.hospitalName.value,
+                                    address: e.target.address.value,
+                                    message: e.target.message.value,
+                                    donationTime: e.target.donationTime.value,
+                                
+                                });
+                            }}>
+                                <input name="recipientName" readOnly value={editingRequest.recipientName} placeholder="Recipient Name" className="border p-2 mb-2 w-full" />
+                                <input
+                                    name="recipientDistrict"
+                                    defaultValue={editingRequest.recipientDistrict || ""}
+                                    placeholder="District"
+                                    className="border p-2 mb-2 w-full"
+                                />
+
+                                <input
+                                    name="address"
+                                    defaultValue={editingRequest.address || ""}
+                                    placeholder="Address"
+                                    className="border p-2 mb-2 w-full"
+                                />
+                                <input
+                                    name="recipientUpazila"
+                                    defaultValue={editingRequest.recipientUpazila || ""}
+                                    placeholder="Upazila"
+                                    className="border p-2 mb-2 w-full"
+                                />
+
+                               
+                                <input name="hospitalName" defaultValue={editingRequest.hospitalName} placeholder="Hospital" className="border p-2 mb-2 w-full" />
+                                <input name="bloodGroup" defaultValue={editingRequest.bloodGroup} placeholder="Blood Group" className="border p-2 mb-2 w-full" />
+                                <input name="donationTime" defaultValue={editingRequest.donationTime} placeholder="Time" className="border p-2 mb-2 w-full" />
+                                <textarea name="message" defaultValue={editingRequest.message} placeholder="Message" className="border p-2 mb-2 w-full" />
+                                <div className="flex justify-end gap-2 mt-2">
+                                    <button type="button" onClick={() => setEditingRequest(null)} className="px-3 py-1 bg-gray-300 rounded">Cancel</button>
+                                    <button type="submit" className="px-3 py-1 bg-blue-500 text-white rounded">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Pagination */}
