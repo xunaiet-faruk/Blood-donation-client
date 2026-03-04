@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-                                    import {FaEye, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaEdit, FaTrash, FaPencilAlt, FaTrashAlt} from 'react-icons/fa';
+import { FaEye, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaEdit, FaTrash, FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
+import Useaxios from "../../../Hooks/Useaxios";
+import { Authcontext } from "../../../Authentication/Context/Authcontext";
+import Swal from "sweetalert2";
 
-// Function to get badge color based on status
 const statusColor = (status) => {
     switch (status) {
         case "pending":
@@ -19,17 +21,63 @@ const statusColor = (status) => {
 };
 
 const MyDonationRequests = () => {
+    const axios = Useaxios()
+    const { user } = use(Authcontext)
     const [requests, setRequests] = useState([]);
     const [filter, setFilter] = useState("all");
     const [currentPage, setCurrentPage] = useState(1);
     const requestsPerPage = 5;
 
     useEffect(() => {
-        fetch("/Recentdonation.json") // তোমার JSON ফাইল
-            .then((res) => res.json())
-            .then((data) => setRequests(data))
-            .catch((err) => console.error("Failed to load data:", err));
-    }, []);
+        axios.get(`/blood-request/${user?.email}`)
+            .then(res => {
+                setRequests(res.data);
+                console.log(res.data);
+            })
+            .catch(err => {
+                console.error("Error fetching requests:", err);
+            });
+    }, [user?.email, axios]);
+
+
+    //Delete data 
+    const handleDeleteRequest = async (id) => {
+        try {
+            const response = await axios.delete(
+                `/blood-request/${id}?email=${user.email}&role=${user.role}`
+            );
+
+          
+            if (response.data.deletedCount > 0) {
+                setRequests(requests.filter(res => res._id !== id));
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Donation request deleted successfully",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else if (response.data.message) {
+              
+                Swal.fire({
+                    title: "Cannot Delete",
+                    text: response.data.message,
+                    icon: "warning",
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                title: "Error",
+                text: "Something went wrong!",
+                icon: "error",
+                timer: 2500,
+                showConfirmButton: false
+            });
+        }
+    };
 
     // Filtered requests
     const filteredRequests =
@@ -42,7 +90,7 @@ const MyDonationRequests = () => {
     const totalPages = Math.ceil(filteredRequests.length / requestsPerPage);
 
     return (
-        <div className="p-6 lg:p-10  min-h-screen relative">
+        <div className="p-6 lg:p-10 min-h-screen relative">
             {/* Background animation */}
             <motion.div
                 animate={{ x: [0, 40, 0], y: [0, -40, 0] }}
@@ -99,117 +147,143 @@ const MyDonationRequests = () => {
                     </thead>
                     <tbody>
                         <AnimatePresence>
-                            {currentRequests.map((req, index) => (
-                                <motion.tr
-                                    key={req.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                                    className="border-b hover:bg-gray-50"
-                                >
-                                    <td className="p-3">{req.recipientName}</td>
-                                    <td className="p-3">{req.location}</td>
-                                    <td className="p-3">{req.hospital || "N/A"}</td>
-                                    <td className="p-3">{req.address || "N/A"}</td>
-                                    <td className="p-3">{req.bloodGroup}</td>
-                                    <td className="p-3">
-                                        {req.donationDate} {req.donationTime}
-                                    </td>
-                                    <td className="p-3">{req.message || "-"}</td>
-                                    <td className="p-3">
-                                        <span
-                                            className={`px-2 py-1 rounded-full text-sm font-medium ${statusColor(
-                                                req.status
-                                            )}`}
-                                        >
-                                            {req.status.toUpperCase()}
-                                        </span>
-                                    </td>
-
-
-                                    <td className="p-3 flex justify-center gap-2">
-                                        {/* View icon */}
-                                        <div className="relative group">
-                                            <button className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
-                                                <FaEye />
-                                            </button>
-                                            <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-gray-800 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                <FaInfoCircle />
-                                                View Details
+                            {currentRequests.length > 0 ? (
+                                currentRequests.map((req, index) => (
+                                    <motion.tr
+                                        key={req._id || req.id}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                                        className="border-b hover:bg-gray-50"
+                                    >
+                                        <td className="p-3">{req.recipientName || req.recipient?.name || req.name || "N/A"}</td>
+                                        <td className="p-3">{req.location || req.city || req.district || "N/A"}</td>
+                                        <td className="p-3">{req.hospital || req.hospitalName || "N/A"}</td>
+                                        <td className="p-3">{req.address || req.fullAddress || "N/A"}</td>
+                                        <td className="p-3">{req.bloodGroup || req.bloodType || req.blood || "N/A"}</td>
+                                        <td className="p-3">
+                                            {req.donationDate || req.date || req.requestDate} {req.donationTime || req.time || ""}
+                                        </td>
+                                        <td className="p-3">{req.message || req.notes || req.additionalNotes || "-"}</td>
+                                        <td className="p-3">
+                                            <span
+                                                className={`px-2 py-1 rounded-full text-sm font-medium ${statusColor(
+                                                    req.status
+                                                )}`}
+                                            >
+                                                {req.status ? req.status.toUpperCase() : "PENDING"}
                                             </span>
-                                        </div>
+                                        </td>
 
-                                        {/* Action buttons */}
-                                        {req.status === "inprogress" ? (
-                                            <>
-                                                <div className="relative group">
-                                                    <button className="px-2 py-1 rounded bg-green-200 text-green-800 text-sm hover:bg-green-300 transition">
-                                                        Done
-                                                    </button>
-                                                    <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-green-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <FaCheckCircle />
-                                                        Mark as Done
-                                                    </span>
-                                                </div>
-                                                <div className="relative group">
-                                                    <button className="px-2 py-1 rounded bg-red-200 text-red-800 text-sm hover:bg-red-300 transition">
-                                                        Cancel
-                                                    </button>
-                                                    <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-red-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <FaTimesCircle />
-                                                        Cancel Request
-                                                    </span>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="relative group">
-                                                    <button className="p-2 rounded-full bg-blue-200 hover:bg-blue-300 transition">
-                                                        <FaEdit />
-                                                    </button>
-                                                    <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-blue-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <FaPencilAlt />
-                                                        Edit Request
-                                                    </span>
-                                                </div>
-                                                <div className="relative group">
-                                                    <button className="p-2 rounded-full bg-red-200 hover:bg-red-300 transition">
-                                                        <FaTrash />
-                                                    </button>
-                                                    <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-red-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                        <FaTrashAlt />
-                                                        Delete Request
-                                                    </span>
-                                                </div>
-                                            </>
-                                        )}
+                                        <td className="p-3 flex justify-center gap-2">
+                                            {/* View icon */}
+                                            <div className="relative group">
+                                                <button
+                                                    onClick={() => handleViewDetails(req)}
+                                                    className="p-2 cursor-pointer rounded-full bg-gray-200 hover:bg-gray-300 transition"
+                                                >
+                                                    <FaEye />
+                                                </button>
+                                                <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-gray-800 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
+                                                    <FaInfoCircle />
+                                                    View Details
+                                                </span>
+                                            </div>
+
+                                            {/* Action buttons */}
+                                            {req.status === "inprogress" ? (
+                                                <>
+                                                    <div className="relative group">
+                                                        <button
+                                                            onClick={() => handleMarkAsDone(req)}
+                                                            className="px-2 py-1 rounded bg-green-200 text-green-800 text-sm hover:bg-green-300 transition"
+                                                        >
+                                                            Done
+                                                        </button>
+                                                        <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-green-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
+                                                            <FaCheckCircle />
+                                                            Mark as Done
+                                                        </span>
+                                                    </div>
+                                                    <div className="relative group">
+                                                        <button
+                                                            onClick={() => handleCancelRequest(req._id)}
+                                                            className="px-2 py-1 rounded bg-red-200 text-red-800 text-sm hover:bg-red-300 transition"
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                        <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-red-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
+                                                            <FaTimesCircle />
+                                                            Cancel Request
+                                                        </span>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="relative group">
+                                                        <button
+                                                            onClick={() => handleEditRequest(req)}
+                                                            className="p-2 cursor-pointer rounded-full bg-blue-200 hover:bg-blue-300 transition"
+                                                        >
+                                                            <FaEdit />
+                                                        </button>
+                                                        <span className="absolute  bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-blue-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
+                                                                <FaPencilAlt className="cursor-pointer"/>
+                                                            Edit Request
+                                                        </span>
+                                                    </div>
+                                                    <div className="relative group">
+                                                        <button
+                                                            onClick={() => handleDeleteRequest(req._id)}
+                                                            className="p-2 cursor-pointer hover:text-white rounded-full bg-red-200 hover:bg-red-600  transition"
+                                                        >
+                                                            <FaTrash />
+                                                        </button>
+                                                        <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-red-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
+                                                            <FaTrashAlt />
+                                                            Delete Request
+                                                        </span>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </td>
+                                    </motion.tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="9" className="text-center py-8 text-gray-500">
+                                        No donation requests found
                                     </td>
-                                </motion.tr>
-                            ))}
+                                </tr>
+                            )}
                         </AnimatePresence>
                     </tbody>
                 </table>
             </div>
 
             {/* Pagination */}
-            <div className="mt-4 flex justify-center items-center gap-3">
-                <button
-                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                    className="px-3 py-1 border rounded hover:bg-gray-100 transition"
-                >
-                    Prev
-                </button>
-                <span>
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                    className="px-3 py-1 border rounded hover:bg-gray-100 transition"
-                >
-                    Next
-                </button>
-            </div>
+            {filteredRequests.length > 0 && (
+                <div className="mt-4 flex justify-center items-center gap-3">
+                    <button
+                        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 border rounded hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Prev
+                    </button>
+                    <span>
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 border rounded hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

@@ -71,7 +71,8 @@ const CreateDonation = () => {
             address,
             donationDate,
             donationTime,
-            message
+            message,
+            status: "pending"
         };
 
         try {
