@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEdit, FaTrash, FaUser, FaLock, FaUnlock } from "react-icons/fa";
+import Useaxios from "../../Hooks/Useaxios";
+import Swal from "sweetalert2";
+import { BsFillUnlockFill } from "react-icons/bs";
 
 // Function to get badge color based on status
 const statusColor = (status) => {
@@ -14,49 +17,74 @@ const statusColor = (status) => {
     }
 };
 
-// Fake Users Data
-const fakeUsers = [
-    {
-        id: 1,
-        avatar: "https://i.pravatar.cc/150?img=1",
-        name: "John Doe",
-        email: "john@example.com",
-        role: "donor",
-        status: "active",
-    },
-    {
-        id: 2,
-        avatar: "https://i.pravatar.cc/150?img=2",
-        name: "Jane Smith",
-        email: "jane@example.com",
-        role: "volunteer",
-        status: "active",
-    },
-    {
-        id: 3,
-        avatar: "https://i.pravatar.cc/150?img=3",
-        name: "Mike Johnson",
-        email: "mike@example.com",
-        role: "donor",
-        status: "blocked",
-    },
-    {
-        id: 4,
-        avatar: "https://i.pravatar.cc/150?img=4",
-        name: "Alice Brown",
-        email: "alice@example.com",
-        role: "admin",
-        status: "active",
-    },
-];
+
 
 const AllUsers = () => {
     const [users, setUsers] = useState([]);
+    const axios =Useaxios()
 
     useEffect(() => {
-        // Load fake data
-        setUsers(fakeUsers);
-    }, []);
+        axios.get("/users")
+            .then((response) => {
+                setUsers(response.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching users:", error);
+                setUsers(fakeUsers);
+            });
+    }, [axios]);
+
+    const handleBlock = async (userId, currentStatus) => {
+        try {
+            const action = currentStatus === 'blocked' ? 'unblock' : 'block';
+            const result = await Swal.fire({
+                title: `Are you sure?`,
+                text: `Do you want to ${action} this user?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: action === 'block' ? '#d33' : '#3085d6',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: `Yes, ${action} it!`
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            const response = await axios.put(`/users/${userId}/block`, {
+                action: action
+            });
+
+            if (response.data.success) {
+                setUsers(users.map(user =>
+                    user._id === userId
+                        ? { ...user, status: response.data.data.status }
+                        : user
+                ));
+
+                Swal.fire({
+                    title: "Success!",
+                    text: response.data.message,
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        } catch (error) {
+            console.log("Error:", error);
+
+            const errorMessage = error.response?.data?.message || "Something went wrong";
+
+            Swal.fire({
+                title: "Error!",
+                text: errorMessage,
+                icon: "error",
+                timer: 2500,
+                showConfirmButton: false
+            });
+        }
+    }
 
     return (
         <div className="p-6 lg:p-10 min-h-screen relative">
@@ -117,7 +145,7 @@ const AllUsers = () => {
                                 >
                                     <td className="p-3">
                                         <img
-                                            src={user.avatar}
+                                            src={user?.photo}
                                             alt={user.name}
                                             className="w-10 h-10 rounded-full"
                                         />
@@ -135,25 +163,17 @@ const AllUsers = () => {
                                         </span>
                                     </td>
                                     <td className="p-3 flex justify-center gap-2">
-                                        {/* Edit */}
-                                        <div className="relative group">
-                                            <button className="p-2 rounded-full bg-blue-200 hover:bg-blue-300 transition">
-                                                <FaEdit />
-                                            </button>
-                                            <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-blue-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
-                                                <FaEdit /> Edit
-                                            </span>
-                                        </div>
+                                     
 
                                         {/* Block/Unblock */}
                                         <div className="relative group">
-                                            <button
+                                            <button onClick={() => handleBlock(user._id,user.status)}
                                                 className={`p-2 rounded-full ${user.status === "active"
-                                                        ? "bg-red-200 hover:bg-red-300"
-                                                        : "bg-green-200 hover:bg-green-300"
+                                                        ? "bg-green-200 hover:bg-green-300"
+                                                        : "bg-red-200 hover:bg-red-300"
                                                     } transition`}
                                             >
-                                                {user.status === "active" ? <FaLock /> : <FaUnlock />}
+                                                {user.status === "active" ? <BsFillUnlockFill />  :  <FaLock />}
                                             </button>
                                             <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-gray-800 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
                                                 {user.status === "active" ? "Block User" : "Unblock User"}
