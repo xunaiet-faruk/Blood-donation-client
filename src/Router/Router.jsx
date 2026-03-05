@@ -11,6 +11,7 @@ import Profile from "../Dashboard/Profile";
 import Alluser from "../Dashboard/AdminDashboard/Alluser";
 import CreateDonation from "../Dashboard/DonarDashboard/CreateDonation";
 import Adminhome from "../Dashboard/AdminDashboard/Adminhome";
+import AllBlooddonationRequest from "../Dashboard/AdminDashboard/AllBlooddonationRequest";
 
 export const router = createBrowserRouter([
     {
@@ -74,6 +75,14 @@ export const router = createBrowserRouter([
                 element: (
                     <Privateroute>
                         <CreateDonation />
+                    </Privateroute>
+                )
+            },
+            {
+                path: "/dashboard/all-blood-donation-request",
+                element: (
+                    <Privateroute>
+                        <AllBlooddonationRequest/>
                     </Privateroute>
                 )
             }

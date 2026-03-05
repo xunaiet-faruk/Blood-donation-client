@@ -41,6 +41,45 @@ const roleIcon = (role) => {
     }
 };
 
+// Table animation variants - শুধু এনিমেশন যোগ করছি
+const tableVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const rowVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 12
+        }
+    },
+    hover: {
+        scale: 1.02,
+        boxShadow: "0px 10px 30px rgba(179, 35, 70, 0.15)",
+        transition: {
+            type: "spring",
+            stiffness: 400,
+            damping: 10
+        }
+    },
+    exit: {
+        opacity: 0,
+        x: 20,
+        transition: {
+            duration: 0.3
+        }
+    }
+};
 
 const AllUsers = () => {
     const [users, setUsers] = useState([]);
@@ -54,7 +93,6 @@ const AllUsers = () => {
             })
             .catch((error) => {
                 console.error("Error fetching users:", error);
-                setUsers(fakeUsers);
             });
     }, [axios]);
 
@@ -110,7 +148,6 @@ const AllUsers = () => {
     }
 
     // Delete function 
-
     const handleDelete = (id) => {
         axios.delete(`/users/${id}`)
             .then(res => {
@@ -118,7 +155,7 @@ const AllUsers = () => {
                     setUsers(users.filter(user => user._id !== id));
                     Swal.fire({
                         title: "Deleted!",
-                        text: "Donation request deleted successfully",
+                        text: "User deleted successfully",
                         icon: "success",
                         timer: 2000,
                         showConfirmButton: false
@@ -127,12 +164,10 @@ const AllUsers = () => {
             })
     }
 
-
-        //Chnage role 
-
+    //Chnage role 
     const handleRoleChange = async (userId, currentRole) => {
         try {
-           
+
             const roles = ['donor', 'volunteer', 'admin'];
             const { value: selectedRole } = await Swal.fire({
                 title: 'Change User Role',
@@ -158,7 +193,7 @@ const AllUsers = () => {
             });
 
             if (selectedRole && selectedRole !== currentRole) {
-               
+
                 const confirmResult = await Swal.fire({
                     title: 'Confirm Role Change',
                     text: `Are you sure you want to change this user's role to ${selectedRole}?`,
@@ -170,7 +205,7 @@ const AllUsers = () => {
                 });
 
                 if (confirmResult.isConfirmed) {
-                 
+
                     const response = await axios.put(`/users/${userId}/role`, {
                         role: selectedRole
                     });
@@ -214,7 +249,6 @@ const AllUsers = () => {
         }
     };
 
-
     return (
         <div className="p-6 lg:p-10 min-h-screen relative">
             {/* Background animation */}
@@ -236,21 +270,19 @@ const AllUsers = () => {
                 transition={{ duration: 0.6 }}
                 className="mb-8 relative flex flex-col items-start gap-4"
             >
-
-
-
-
                 {/* Main Title */}
                 <h1 className="text-4xl md:text-5xl font-extrabold text-[#B32346] drop-shadow-lg">
                     All Users
                 </h1>
-
-
             </motion.div>
 
-            {/* Users Table */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+            <motion.div
+                variants={tableVariants}
+                initial="hidden"
+                animate="visible"
+                className="overflow-x-auto"
+            >
+                <table className="min-w-full bg-white rounded-xl shadow-2xl overflow-x-auto">
                     <thead className="bg-gray-100">
                         <tr>
                             <th className="p-3 text-left">Avatar</th>
@@ -262,14 +294,16 @@ const AllUsers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <AnimatePresence>
+                        <AnimatePresence mode="wait">
                             {users.map((user, index) => (
                                 <motion.tr
-                                    key={user.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                                    key={user._id || user.id || index}
+                                    variants={rowVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    whileHover="hover"
+                                    custom={index}
                                     className="border-b hover:bg-gray-50"
                                 >
                                     <td className="p-3">
@@ -289,22 +323,21 @@ const AllUsers = () => {
                                             {roleIcon(user.role)}
                                             {user.role?.toUpperCase() || "DONOR"}
                                         </button>
-                                    </td>  
-                                      <td className="p-3">
+                                    </td>
+                                    <td className="p-3">
                                         <span
                                             className={`px-2 py-1 rounded-full text-sm font-medium ${statusColor(
                                                 user.status
                                             )}`}
                                         >
-                                            {user?.status.toUpperCase()}
+                                            {user?.status?.toUpperCase()}
                                         </span>
                                     </td>
                                     <td className="p-3 flex justify-center gap-2">
-
-
                                         {/* Block/Unblock */}
                                         <div className="relative group ">
-                                            <button onClick={() => handleBlock(user._id, user.status)}
+                                            <button
+                                                onClick={() => handleBlock(user._id, user.status)}
                                                 className={`p-2 cursor-pointer rounded-full ${user.status === "active"
                                                     ? "bg-green-200 hover:bg-green-300"
                                                     : "bg-red-200 hover:bg-red-300"
@@ -319,7 +352,10 @@ const AllUsers = () => {
 
                                         {/* Delete */}
                                         <div className="relative group">
-                                            <button onClick={() => handleDelete(user._id)} className="p-2 cursor-pointer rounded-full bg-red-200 hover:bg-red-300 transition">
+                                            <button
+                                                onClick={() => handleDelete(user._id)}
+                                                className="p-2 cursor-pointer rounded-full bg-red-200 hover:bg-red-300 transition"
+                                            >
                                                 <FaTrash />
                                             </button>
                                             <span className="absolute bottom-full mb-2 hidden group-hover:flex items-center gap-2 bg-red-700 text-white text-sm font-semibold rounded px-3 py-1 whitespace-nowrap z-10 shadow-lg">
@@ -332,7 +368,7 @@ const AllUsers = () => {
                         </AnimatePresence>
                     </tbody>
                 </table>
-            </div>
+            </motion.div>
         </div>
     );
 };

@@ -50,7 +50,8 @@ const SideDashboardLinks = () => {
         { name: "All Blood Donation Requests", path: "/dashboard/all-blood-donation-request", icon: <FaClipboardList /> },
 
         // Volunteer dashboard links
-        { name: "Assigned Donation Requests", path: "/dashboard/all-blood-donation-request", icon: <FaHandHoldingHeart /> },
+        {
+            name: "Assigned Donation Requests", path: "/dashboard/Assigned Donation Requests", icon: <FaHandHoldingHeart /> },
 
         // Donor dashboard links
         { name: "Profile", path: "/dashboard/profile", icon: <FaUserAlt /> },
