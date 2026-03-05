@@ -269,7 +269,7 @@ const handleViewDetails = (id) => {
                                                 <>
                                                     <div className="relative group">
                                                         <button
-                                                            onClick={() => handleEditRequest(req._id)}
+                                                            onClick={() => handleEditRequest(req)}
                                                             className="p-2 cursor-pointer rounded-full bg-blue-200 hover:bg-blue-300 transition"
                                                         >
                                                             <FaEdit />

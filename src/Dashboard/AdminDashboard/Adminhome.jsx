@@ -4,6 +4,7 @@ import { Authcontext } from "../../Authentication/Context/Authcontext";
 import AdminDashbordOverview from "./AdminDashbordOverview";
 import Useaxios from "../../Hooks/Useaxios";
 import AdminanalysisChart from "./AdminanalysisChart";
+import WelcomeSectionAdmin from "./WelcomeSectionAdmin";
 
 const statusColor = (status) => {
     switch (status) {
@@ -29,7 +30,7 @@ const cardVariants = {
 const Adminhome = () => {
     const [requests, setRequests] = useState([]);
     const { user } = use(Authcontext);
-    const [showCongrats, setShowCongrats] = useState(false); // Initially false
+    const [showCongrats, setShowCongrats] = useState(false);
     const [startCountUp, setStartCountUp] = useState(false);
     const axios = Useaxios();
     const [stats, setStats] = useState({
@@ -69,43 +70,82 @@ const Adminhome = () => {
         };
 
         fetchStats();
-    }, []);
+    }, [axios]);
 
     useEffect(() => {
         // Check if user has seen the congratulation message before
         const hasSeenCongrats = localStorage.getItem(`hasSeenCongrats_${user?.email}`);
 
         if (!hasSeenCongrats && user) {
-            // If user hasn't seen it, show the animation
             setShowCongrats(true);
 
-            // Set timer to hide animation
             const timer = setTimeout(() => {
                 setShowCongrats(false);
                 setStartCountUp(true);
-                // Store in localStorage that user has seen it
                 localStorage.setItem(`hasSeenCongrats_${user?.email}`, 'true');
             }, 1800);
 
             return () => clearTimeout(timer);
         } else {
-            // If user has seen it before, directly start countup
             setStartCountUp(true);
         }
     }, [user]);
 
     useEffect(() => {
-        fetch("/Recentdonation.json")
-            .then((res) => res.json())
-            .then((data) => setRequests(data))
-            .catch((err) => console.error("Failed to load data:", err));
-    }, []);
+        axios.get("/blood-request")
+            .then((res) => {
+                // Sort by donationDate (newest first)
+                const sortedRequests = res.data.sort((a, b) => {
+                    const dateA = new Date(a.donationDate);
+                    const dateB = new Date(b.donationDate);
+
+                    if (dateA.toDateString() === dateB.toDateString()) {
+                        const timeA = a.donationTime || "00:00";
+                        const timeB = b.donationTime || "00:00";
+                        return timeB.localeCompare(timeA);
+                    }
+
+                    return dateB - dateA;
+                });
+
+                // Take only the first 3 (most recent)
+                const recentRequests = sortedRequests.slice(0, 3);
+                setRequests(recentRequests);
+            })
+            .catch((err) => {
+                console.error("Failed to load data:", err);
+            });
+    }, [axios]);
 
     return (
         <div>
+          <WelcomeSectionAdmin stats={stats} />
             {/* Pass startCountUp prop to AdminDashbordOverview */}
             <AdminDashbordOverview stats={stats} startCountUp={startCountUp} />
 
+            {/* Recent requests tagline with animation */}
+            <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1, type: "spring" }}
+                className="mt-6 ml-5 flex items-center gap-3"
+            >
+
+                <motion.div animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="w-1 h-8 bg-gradient-to-b from-[#B32346] to-transparent rounded-full"
+                />
+                <p className="text-gray-500 text-lg">
+                    <span className="font-semibold text-[#B32346]">3 most recent</span> donation requests
+                </p>
+                <motion.div
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    className="text-[#B32346] text-sm"
+                >
+                    🔄
+                </motion.div>
+            </motion.div>
             <div className="p-6 lg:p-10">
                 {showCongrats && (
                     <motion.div
@@ -180,26 +220,13 @@ const Adminhome = () => {
                     </motion.div>
                 )}
 
-                {/* Welcome Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: -30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="mb-8 text-center lg:text-left"
-                >
-                    <h1 className="text-3xl lg:text-4xl font-bold text-[#B32346] mb-2">
-                        Welcome, {user?.displayName || "User"}!
-                    </h1>
-                    <p className="text-gray-600">
-                        Here are your 3 most recent donation requests.
-                    </p>
-                </motion.div>
+               
 
                 {/* Recent Donation Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {requests.map((req, index) => (
                         <motion.div
-                            key={req.id}
+                            key={req._id || req.id || index}
                             variants={cardVariants}
                             initial="hidden"
                             animate="visible"
@@ -219,20 +246,23 @@ const Adminhome = () => {
                                         req.status
                                     )}`}
                                 >
-                                    {req.status.toUpperCase()}
+                                    {req.status?.toUpperCase() || "PENDING"}
                                 </span>
                             </div>
                             <p className="text-gray-500 mb-1">
-                                <strong>Location:</strong> {req.location}
+                                <strong>Email:</strong> {req?.email || "N/A"}
                             </p>
                             <p className="text-gray-500 mb-1">
-                                <strong>Blood Group:</strong> {req.bloodGroup}
+                                <strong>Location:</strong> {req?.address || "N/A"}
                             </p>
                             <p className="text-gray-500 mb-1">
-                                <strong>Date:</strong> {req.donationDate}
+                                <strong>Blood Group:</strong> {req?.bloodGroup || "N/A"}
+                            </p>
+                            <p className="text-gray-500 mb-1">
+                                <strong>Date:</strong> {req?.donationDate || "N/A"}
                             </p>
                             <p className="text-gray-500">
-                                <strong>Time:</strong> {req.donationTime}
+                                <strong>Time:</strong> {req?.donationTime || "N/A"}
                             </p>
 
                             <div className="mt-4 flex justify-between">
