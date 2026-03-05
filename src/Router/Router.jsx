@@ -12,6 +12,8 @@ import Alluser from "../Dashboard/AdminDashboard/Alluser";
 import CreateDonation from "../Dashboard/DonarDashboard/CreateDonation";
 import Adminhome from "../Dashboard/AdminDashboard/Adminhome";
 import AllBlooddonationRequest from "../Dashboard/AdminDashboard/AllBlooddonationRequest";
+import AdminContentWrite from "../Dashboard/AdminDashboard/AdminContentWrite";
+import AdminContenManagment from "../Dashboard/AdminDashboard/AdminContenManagment";
 
 export const router = createBrowserRouter([
     {
@@ -83,6 +85,22 @@ export const router = createBrowserRouter([
                 element: (
                     <Privateroute>
                         <AllBlooddonationRequest/>
+                    </Privateroute>
+                )
+            },
+            {
+                path: "/dashboard/content-write",
+                element: (
+                    <Privateroute>
+                        <AdminContentWrite/>
+                    </Privateroute>
+                )
+            },
+            {
+                path: "/dashboard/Content-Management",
+                element: (
+                    <Privateroute>
+                        <AdminContenManagment/>
                     </Privateroute>
                 )
             }

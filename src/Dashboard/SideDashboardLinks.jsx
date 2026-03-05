@@ -1,9 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { FaHome, FaUserAlt, FaUsers, FaBars, FaHandHoldingHeart, FaClipboardList, FaPlusCircle, FaCog, FaTimes } from "react-icons/fa";
+import { FaHome, FaUserAlt, FaUsers, FaBars, FaHandHoldingHeart, FaClipboardList, FaPlusCircle, FaCog, FaTimes, FaPenNib } from "react-icons/fa";
 import { Authcontext } from "../Authentication/Context/Authcontext";
 import Useaxios from "../Hooks/Useaxios";
+import { MdManageAccounts } from "react-icons/md";
 
 
 const SideDashboardLinks = () => {
@@ -48,6 +49,8 @@ const SideDashboardLinks = () => {
         { name: "Dashboard", path: "/dashboard", icon: <FaUserAlt /> },
         { name: "All Users", path: "/dashboard/allusers", icon: <FaUsers /> },
         { name: "All Blood Donation Requests", path: "/dashboard/all-blood-donation-request", icon: <FaClipboardList /> },
+        { name: "Content Write", path: "/dashboard/content-write", icon: <FaPenNib /> },
+        { name: "Content Management", path: "/dashboard/Content-Management", icon: <MdManageAccounts /> },
 
         // Volunteer dashboard links
         {
@@ -71,7 +74,9 @@ const SideDashboardLinks = () => {
             return [
                 "/dashboard",
                 "/dashboard/allusers",
-                "/dashboard/all-blood-donation-request"
+                "/dashboard/all-blood-donation-request",
+                "/dashboard/content-write",
+                "/dashboard/Content-Management"
             ].includes(item.path);
         }
 
