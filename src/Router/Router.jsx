@@ -14,6 +14,7 @@ import Adminhome from "../Dashboard/AdminDashboard/Adminhome";
 import AllBlooddonationRequest from "../Dashboard/AdminDashboard/AllBlooddonationRequest";
 import AdminContentWrite from "../Dashboard/AdminDashboard/AdminContentWrite";
 import AdminContenManagment from "../Dashboard/AdminDashboard/AdminContenManagment";
+import AssignDonationreq from "../Dashboard/VolunteerDashboard/AssignDonationreq";
 
 export const router = createBrowserRouter([
     {
@@ -101,6 +102,14 @@ export const router = createBrowserRouter([
                 element: (
                     <Privateroute>
                         <AdminContenManagment/>
+                    </Privateroute>
+                )
+            },
+            {
+                path: "/dashboard/assigned-donation-requests",
+                element: (
+                    <Privateroute>
+                        <AssignDonationreq/>
                     </Privateroute>
                 )
             }

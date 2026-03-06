@@ -84,8 +84,7 @@ const SideDashboardLinks = () => {
         // Volunteer role 
         if (userRole === "volunteer") {
             return [
-                "/dashboard",
-                "/dashboard/all-blood-donation-request",
+                "/dashboard/profile", 
                 "/dashboard/assigned-donation-requests"  
             ].includes(item.path);
         }
