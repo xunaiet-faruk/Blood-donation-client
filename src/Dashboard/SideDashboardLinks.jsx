@@ -47,51 +47,53 @@ const SideDashboardLinks = () => {
 
         // Admin dashboard links
         { name: "Dashboard", path: "/dashboard", icon: <FaUserAlt /> },
+        { name: "Profile", path: "/dashboard/profile", icon: <FaUserAlt /> }, // Single profile for admin
         { name: "All Users", path: "/dashboard/allusers", icon: <FaUsers /> },
         { name: "All Blood Donation Requests", path: "/dashboard/all-blood-donation-request", icon: <FaClipboardList /> },
         { name: "Content Write", path: "/dashboard/content-write", icon: <FaPenNib /> },
         { name: "Content Management", path: "/dashboard/Content-Management", icon: <MdManageAccounts /> },
 
         // Volunteer dashboard links
-        {
-            name: "Assigned Donation Requests", path: "/dashboard/Assigned Donation Requests", icon: <FaHandHoldingHeart /> },
+        { name: "Assigned Donation Requests", path: "/dashboard/assigned-donation-requests", icon: <FaHandHoldingHeart /> },
 
         // Donor dashboard links
-        { name: "Profile", path: "/dashboard/profile", icon: <FaUserAlt /> },
+        // { name: "Profile", path: "/dashboard/profile", icon: <FaUserAlt /> }, // REMOVED - duplicate
         { name: "Donation Requests", path: "/dashboard/donation-requests", icon: <FaClipboardList /> },
         { name: "Create Donation Request", path: "/dashboard/create-donation-request", icon: <FaPlusCircle /> },
     ];
 
     const navItems = allNavItems.filter(item => {
-        // Home সবাই দেখবে
+     
         if (item.path === "/") return true;
 
-        // যদি user না থাকে বা role না থাকে, তাহলে শুধু Home দেখাবে
+      
         if (!user || !userRole) return false;
 
-        // Admin role এর জন্য
+        // Admin role 
         if (userRole === "admin") {
             return [
                 "/dashboard",
+                "/dashboard/profile",  
                 "/dashboard/allusers",
                 "/dashboard/all-blood-donation-request",
                 "/dashboard/content-write",
-                "/dashboard/Content-Management"
+                "/dashboard/Content-Management",
             ].includes(item.path);
         }
 
-        // Volunteer role এর জন্য
+        // Volunteer role 
         if (userRole === "volunteer") {
             return [
                 "/dashboard",
-                "/dashboard/all-blood-donation-request"
+                "/dashboard/all-blood-donation-request",
+                "/dashboard/assigned-donation-requests"  
             ].includes(item.path);
         }
 
-        // Donor role এর জন্য 
+        // Donor role 
         if (userRole === "donor") {
             return [
-                "/dashboard/profile",
+                "/dashboard/profile",  
                 "/dashboard/donation-requests",
                 "/dashboard/create-donation-request"
             ].includes(item.path);

@@ -116,7 +116,7 @@ const AdminContenManagment = () => {
 
                                     {/* Date */}
                                     <p className="text-xs text-gray-400 mb-4">
-                                        {new Date(item.createdAt).toLocaleDateString()}
+                                        Date : {item.date}
                                     </p>
 
                                     {/* Delete Button */}
