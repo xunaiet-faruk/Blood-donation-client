@@ -6,7 +6,6 @@ import { Authcontext } from "../Authentication/Context/Authcontext";
 import Useaxios from "../Hooks/Useaxios";
 import { MdManageAccounts } from "react-icons/md";
 
-
 const SideDashboardLinks = () => {
     const [open, setOpen] = useState(false);
     const [userRole, setUserRole] = useState(null);
@@ -19,11 +18,9 @@ const SideDashboardLinks = () => {
             if (user?.email) {
                 try {
                     setLoading(true);
-                    
                     const response = await axios.get(`/register/${user.email}`);
                     console.log("User data from MongoDB:", response.data);
                     setUserRole(response.data.role);
-                    console.log(response.data);
                 } catch (error) {
                     console.error("Error fetching user role:", error);
                     setUserRole(null);
@@ -39,74 +36,69 @@ const SideDashboardLinks = () => {
         fetchUserRole();
     }, [user, axios]);
 
-  
-   
+    // Role অনুযায়ী links ফিল্টার করুন
+    const getNavItems = () => {
+        const allItems = [
+            { name: "Dashboard", path: "/dashboard", icon: <FaHome />, roles: ['admin'] },
+            { name: "Profile", path: "/dashboard/profile", icon: <FaUserAlt />, roles: ['admin', 'volunteer', 'donor'] },
+            { name: "All Users", path: "/dashboard/allusers", icon: <FaUsers />, roles: ['admin'] },
+            { name: "All Blood Requests", path: "/dashboard/all-blood-donation-request", icon: <FaClipboardList />, roles: ['admin'] },
+            { name: "Content Write", path: "/dashboard/content-write", icon: <FaPenNib />, roles: ['admin'] },
+            { name: "Content Management", path: "/dashboard/Content-Management", icon: <MdManageAccounts />, roles: ['admin'] },
+            { name: "Assigned Requests", path: "/dashboard/assigned-donation-requests", icon: <FaHandHoldingHeart />, roles: ['volunteer'] },
+            { name: "Donation Requests", path: "/dashboard/donation-requests", icon: <FaClipboardList />, roles: ['donor'] },
+            { name: "Create Request", path: "/dashboard/create-donation-request", icon: <FaPlusCircle />, roles: ['donor'] },
+        ];
 
-    const allNavItems = [
-        { name: "Home", path: "/", icon: <FaHome /> },
+        return userRole ? allItems.filter(item => item.roles.includes(userRole)) : [];
+    };
 
-        // Admin dashboard links
-        { name: "Dashboard", path: "/dashboard", icon: <FaUserAlt /> },
-        { name: "Profile", path: "/dashboard/profile", icon: <FaUserAlt /> }, // Single profile for admin
-        { name: "All Users", path: "/dashboard/allusers", icon: <FaUsers /> },
-        { name: "All Blood Donation Requests", path: "/dashboard/all-blood-donation-request", icon: <FaClipboardList /> },
-        { name: "Content Write", path: "/dashboard/content-write", icon: <FaPenNib /> },
-        { name: "Content Management", path: "/dashboard/Content-Management", icon: <MdManageAccounts /> },
+    const navItems = getNavItems();
 
-        // Volunteer dashboard links
-        { name: "Assigned Donation Requests", path: "/dashboard/assigned-donation-requests", icon: <FaHandHoldingHeart /> },
+    // NavLinks কম্পোনেন্ট (একই ফাইলের ভিতরে)
+    const NavLinks = ({ navItems, closeDrawer }) => {
+        return (
+            <div className="space-y-3">
+                {navItems.map((item, index) => (
+                    <motion.div
+                        key={index}
+                        whileHover={{ scale: 1.03, x: 5 }}
+                        whileTap={{ scale: 0.97 }}
+                    >
+                        <NavLink
+                            to={item.path}
+                            onClick={closeDrawer}
+                            end={item.path === "/dashboard"}
+                            className={({ isActive }) =>
+                                `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${isActive
+                                    ? "bg-[#B32346] text-white shadow-md"
+                                    : "text-gray-700 hover:bg-gray-200"
+                                }`
+                            }
+                        >
+                            <span className="text-lg">{item.icon}</span>
+                            {item.name}
+                        </NavLink>
+                    </motion.div>
+                ))}
+            </div>
+        );
+    };
 
-        // Donor dashboard links
-        // { name: "Profile", path: "/dashboard/profile", icon: <FaUserAlt /> }, // REMOVED - duplicate
-        { name: "Donation Requests", path: "/dashboard/donation-requests", icon: <FaClipboardList /> },
-        { name: "Create Donation Request", path: "/dashboard/create-donation-request", icon: <FaPlusCircle /> },
-    ];
-
-    const navItems = allNavItems.filter(item => {
-     
-        if (item.path === "/") return true;
-
-      
-        if (!user || !userRole) return false;
-
-        // Admin role 
-        if (userRole === "admin") {
-            return [
-                "/dashboard",
-                "/dashboard/profile",  
-                "/dashboard/allusers",
-                "/dashboard/all-blood-donation-request",
-                "/dashboard/content-write",
-                "/dashboard/Content-Management",
-            ].includes(item.path);
-        }
-
-        // Volunteer role 
-        if (userRole === "volunteer") {
-            return [
-                "/dashboard/profile", 
-                "/dashboard/assigned-donation-requests"  
-            ].includes(item.path);
-        }
-
-        // Donor role 
-        if (userRole === "donor") {
-            return [
-                "/dashboard/profile",  
-                "/dashboard/donation-requests",
-                "/dashboard/create-donation-request"
-            ].includes(item.path);
-        }
-
-        return false;
-    });
-
-    
     if (loading) {
         return (
             <div className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-white shadow-xl p-6 flex-col items-center justify-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B32346]"></div>
                 <p className="mt-4 text-gray-600">Loading...</p>
+            </div>
+        );
+    }
+
+    // যদি user না থাকে বা navItems খালি থাকে
+    if (!user || navItems.length === 0) {
+        return (
+            <div className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-white shadow-xl p-6 flex-col items-center justify-center">
+                <p className="text-gray-500">No menu items available</p>
             </div>
         );
     }
@@ -122,20 +114,18 @@ const SideDashboardLinks = () => {
             </div>
 
             {/* Desktop Sidebar */}
-            {user && navItems.length > 0 && (
-                <div className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-white shadow-xl p-6 flex-col">
-                    <h2 className="text-2xl font-bold text-[#B32346] mb-8">
-                        {userRole === "donor" ? "Donor Menu" :
-                            userRole === "admin" ? "Admin Menu" :
-                                userRole === "volunteer" ? "Volunteer Menu" : "Menu"}
-                    </h2>
-                    <NavLinks navItems={navItems} />
-                </div>
-            )}
+            <div className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-white shadow-xl p-6 flex-col">
+                <h2 className="text-2xl font-bold text-[#B32346] mb-8">
+                    {userRole === "donor" ? "Donor Menu" :
+                        userRole === "admin" ? "Admin Menu" :
+                            userRole === "volunteer" ? "Volunteer Menu" : "Menu"}
+                </h2>
+                <NavLinks navItems={navItems} />
+            </div>
 
             {/* Mobile Drawer */}
             <AnimatePresence>
-                {open && user && navItems.length > 0 && (
+                {open && (
                     <>
                         {/* Overlay */}
                         <motion.div
@@ -171,35 +161,6 @@ const SideDashboardLinks = () => {
                 )}
             </AnimatePresence>
         </>
-    );
-};
-
-const NavLinks = ({ navItems, closeDrawer }) => {
-    return (
-        <div className="space-y-3">
-            {navItems.map((item, index) => (
-                <motion.div
-                    key={index}
-                    whileHover={{ scale: 1.03, x: 5 }}
-                    whileTap={{ scale: 0.97 }}
-                >
-                    <NavLink
-                        to={item.path}
-                        onClick={closeDrawer}
-                        end={item.path === "/dashboard"}
-                        className={({ isActive }) =>
-                            `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${isActive
-                                ? "bg-[#B32346] text-white shadow-md"
-                                : "text-gray-700 hover:bg-gray-200"
-                            }`
-                        }
-                    >
-                        <span className="text-lg">{item.icon}</span>
-                        {item.name}
-                    </NavLink>
-                </motion.div>
-            ))}
-        </div>
     );
 };
 

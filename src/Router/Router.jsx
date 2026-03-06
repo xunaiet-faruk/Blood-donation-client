@@ -1,3 +1,4 @@
+// Router/Router.jsx
 import { createBrowserRouter } from "react-router-dom";
 import Mainlayout from "../layout/Mainlayout";
 import Home from "../component/Homepages/Home";
@@ -5,7 +6,6 @@ import Error from "../shared/Error";
 import Login from "../Authentication/Resgister/Login";
 import Register from "../Authentication/Resgister/Register";
 import Donationrequest from "../component/Homepages/DonationRequests/Donationrequest";
-import Privateroute from "./Privateroute";
 import DasboardLayout from "../Dashboard/DasboardLayout";
 import Profile from "../Dashboard/Profile";
 import Alluser from "../Dashboard/AdminDashboard/Alluser";
@@ -15,6 +15,7 @@ import AllBlooddonationRequest from "../Dashboard/AdminDashboard/AllBlooddonatio
 import AdminContentWrite from "../Dashboard/AdminDashboard/AdminContentWrite";
 import AdminContenManagment from "../Dashboard/AdminDashboard/AdminContenManagment";
 import AssignDonationreq from "../Dashboard/VolunteerDashboard/AssignDonationreq";
+import RoleBasedRoute from "../Authentication/RolebaseRoute";
 
 export const router = createBrowserRouter([
     {
@@ -34,87 +35,97 @@ export const router = createBrowserRouter([
                 path: "login",
                 element: <Login />
             },
-           
         ]
     },
     {
         path: "/dashboard",
         element: (
-            <Privateroute>
+            <RoleBasedRoute allowedRoles={['admin', 'volunteer', 'donor']}>  {/* 🔥 সবাইকে অনুমতি দিন */}
                 <DasboardLayout />
-            </Privateroute>
+            </RoleBasedRoute>
         ),
         children: [
+            // ড্যাশবোর্ড হোম - role অনুযায়ী আলাদা কন্টেন্ট দেখাবে
             {
                 index: true,
-                element: <Privateroute><Adminhome /></Privateroute>
-            },
-            {
-                path: "/dashboard/donation-requests",
                 element: (
-                    <Privateroute>
-                        <Donationrequest />
-                    </Privateroute>
+                    <RoleBasedRoute allowedRoles={['admin', 'volunteer', 'donor']}>
+                        <Adminhome />  {/* এই কম্পোনেন্টের ভিতরে role check করে আলাদা কন্টেন্ট দেখান */}
+                    </RoleBasedRoute>
                 )
             },
+
+            // Profile - সবাই দেখবে
             {
-                path: "/dashboard/profile",
+                path: "profile",
                 element: (
-                    <Privateroute>
+                    <RoleBasedRoute allowedRoles={['admin', 'volunteer', 'donor']}>
                         <Profile />
-                    </Privateroute>
+                    </RoleBasedRoute>
                 ),
             },
+
+            // 🟢 ADMIN ONLY ROUTES
             {
-                path: "/dashboard/allusers",
+                path: "allusers",
                 element: (
-                    <Privateroute>
+                    <RoleBasedRoute allowedRoles={['admin']}>
                         <Alluser />
-                    </Privateroute>
+                    </RoleBasedRoute>
                 )
             },
             {
-                path: "/dashboard/create-donation-request",
+                path: "all-blood-donation-request",
                 element: (
-                    <Privateroute>
+                    <RoleBasedRoute allowedRoles={['admin']}>
+                        <AllBlooddonationRequest />
+                    </RoleBasedRoute>
+                )
+            },
+            {
+                path: "content-write",
+                element: (
+                    <RoleBasedRoute allowedRoles={['admin']}>
+                        <AdminContentWrite />
+                    </RoleBasedRoute>
+                )
+            },
+            {
+                path: "Content-Management",
+                element: (
+                    <RoleBasedRoute allowedRoles={['admin']}>
+                        <AdminContenManagment />
+                    </RoleBasedRoute>
+                )
+            },
+
+            // 🟢 VOLUNTEER ONLY ROUTES
+            {
+                path: "assigned-donation-requests",
+                element: (
+                    <RoleBasedRoute allowedRoles={['volunteer']}>
+                        <AssignDonationreq />
+                    </RoleBasedRoute>
+                )
+            },
+
+            // 🟢 DONOR ONLY ROUTES
+            {
+                path: "donation-requests",
+                element: (
+                    <RoleBasedRoute allowedRoles={['donor']}>
+                        <Donationrequest />
+                    </RoleBasedRoute>
+                )
+            },
+            {
+                path: "create-donation-request",
+                element: (
+                    <RoleBasedRoute allowedRoles={['donor']}>
                         <CreateDonation />
-                    </Privateroute>
-                )
-            },
-            {
-                path: "/dashboard/all-blood-donation-request",
-                element: (
-                    <Privateroute>
-                        <AllBlooddonationRequest/>
-                    </Privateroute>
-                )
-            },
-            {
-                path: "/dashboard/content-write",
-                element: (
-                    <Privateroute>
-                        <AdminContentWrite/>
-                    </Privateroute>
-                )
-            },
-            {
-                path: "/dashboard/Content-Management",
-                element: (
-                    <Privateroute>
-                        <AdminContenManagment/>
-                    </Privateroute>
-                )
-            },
-            {
-                path: "/dashboard/assigned-donation-requests",
-                element: (
-                    <Privateroute>
-                        <AssignDonationreq/>
-                    </Privateroute>
+                    </RoleBasedRoute>
                 )
             }
-           
-
         ]
     }
 ]);
