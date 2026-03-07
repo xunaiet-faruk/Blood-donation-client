@@ -17,8 +17,8 @@ import AssignDonationreq from "../Dashboard/VolunteerDashboard/AssignDonationreq
 import RoleBasedRoute from "../Authentication/RolebaseRoute";
 import PublicDonationrequest from "../component/Homepages/Publicdonationreq/PublicDonationrequest";
 import Privateroute from "./Privateroute";
-import SearchDonors from "../component/Homepages/FindDonar/SearchDonors";
 import Blog from "../component/Homepages/Blogsection/Blog";
+import Contact from "../component/Homepages/Contact/Contact";
 
 
 export const router = createBrowserRouter([
@@ -40,8 +40,8 @@ export const router = createBrowserRouter([
                 element:<Privateroute><PublicDonationrequest/> </Privateroute>
             },
             {
-                path: "searchDonor",
-                element:<Privateroute><SearchDonors/> </Privateroute>
+                path: "Contact",
+                element:<Contact/> 
             },
             {
                 path: "register",

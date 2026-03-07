@@ -1,11 +1,11 @@
 import React from 'react';
 
-const SearchDonors = () => {
+const Contact = () => {
     return (
         <div>
-            fdasdf
+            fda
         </div>
     );
 };
 
-export default SearchDonors;
+export default Contact;

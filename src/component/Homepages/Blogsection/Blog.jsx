@@ -58,7 +58,7 @@ const stats = [
     }
 ];
 
-const BloodDonationBlog = () => {
+const Blog = () => {
     const [blogPosts, setBlogPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -635,4 +635,4 @@ const BloodDonationBlog = () => {
     );
 };
 
-export default BloodDonationBlog;
+export default Blog;
