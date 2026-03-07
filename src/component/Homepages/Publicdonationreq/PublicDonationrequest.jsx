@@ -190,7 +190,7 @@ const PublicDonationrequest = () => {
                         repeat: Infinity,
                         ease: "linear"
                     }}
-                    className="absolute -bottom-1/2 -left-1/2 w-96 h-96 bg-blue-200 rounded-full blur-3xl"
+                    className="absolute -bottom-1/2 -left-1/2 w-96 h-96 bg-red-200 rounded-full blur-3xl"
                 />
             </div>
 
@@ -203,7 +203,7 @@ const PublicDonationrequest = () => {
                     className="relative mb-12 overflow-hidden rounded-3xl"
                 >
                     {/* Main Banner */}
-                    <div className="relative bg-gradient-to-r bg-gray-100  rounded-3xl  shadow-2xl overflow-hidden">
+                    <div className="relative  bg-gray-100  rounded-3xl  overflow-hidden">
                         {/* Animated Pattern */}
                         <motion.div
                             animate={{

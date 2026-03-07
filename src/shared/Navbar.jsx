@@ -24,8 +24,8 @@ const Navbar = () => {
         <NavLink to={'/publicSeeDonor'}>
             Donation Requests
     </NavLink>
-        <NavLink to={'/searchDonor'}>
-            Funding Donors
+        <NavLink to={'/Contact'}>
+            Contact
     </NavLink>
     
     </>
