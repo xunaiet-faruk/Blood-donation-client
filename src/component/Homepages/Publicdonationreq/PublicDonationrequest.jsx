@@ -223,29 +223,7 @@ const PublicDonationrequest = () => {
                             }}></div>
                         </motion.div>
 
-                        {/* Floating Blood Drops */}
-                        {[...Array(5)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                animate={{
-                                    y: [0, -20, 0],
-                                    x: [0, 10, 0],
-                                    rotate: [0, 10, -10, 0]
-                                }}
-                                transition={{
-                                    duration: 4 + i,
-                                    repeat: Infinity,
-                                    delay: i * 0.5
-                                }}
-                                className="absolute"
-                                style={{
-                                    left: `${10 + i * 20}%`,
-                                    top: `${20 + i * 10}%`
-                                }}
-                            >
-                                <FaTint className="w-8 h-8 text-white/20" />
-                            </motion.div>
-                        ))}
+                      
 
                         <div className="relative px-6 py-12 md:px-12 md:py-16">
                             <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -327,7 +305,7 @@ const PublicDonationrequest = () => {
                                     >
                                         {/* Main Blood Drop */}
                                         <div className="relative">
-                                            <div className="w-40 h-40 mx-auto bg-gradient-to-br from-red-400 to-red-600 rounded-full shadow-2xl flex items-center justify-center">
+                                            <div className="w-40 h-40 mx-auto bg-gradient-to-br from-red-600 to-red-700 rounded-full shadow-2xl flex items-center justify-center">
                                                 <motion.div
                                                     animate={{
                                                         scale: [1, 1.2, 1],
@@ -342,22 +320,7 @@ const PublicDonationrequest = () => {
                                                 </motion.div>
                                             </div>
 
-                                            {/* Pulse Rings */}
-                                            {[...Array(3)].map((_, i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    animate={{
-                                                        scale: [1, 2, 1],
-                                                        opacity: [0.3, 0, 0.3]
-                                                    }}
-                                                    transition={{
-                                                        duration: 2,
-                                                        repeat: Infinity,
-                                                        delay: i * 0.5
-                                                    }}
-                                                    className="absolute inset-0 rounded-full border-4 border-red-400"
-                                                />
-                                            ))}
+                                          
                                         </div>
 
                                         {/* Floating Icons */}
@@ -373,7 +336,7 @@ const PublicDonationrequest = () => {
                                             transition={{ duration: 4, repeat: Infinity }}
                                             className="absolute -bottom-10 -left-10"
                                         >
-                                            <BiHealth className="w-12 h-12 text-red-400" />
+                                            <BiHealth className="w-12 h-12  text-[#B32346] " />
                                         </motion.div>
                                     </motion.div>
                                 </motion.div>
@@ -496,7 +459,7 @@ const PublicDonationrequest = () => {
                                             className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 group"
                                         >
                                             {/* Card Header with Blood Group */}
-                                            <div className="relative h-32 bg-gradient-to-r from-red-600 to-red-800 overflow-hidden">
+                                            <div className="relative h-32 bg-gradient-to-r from-[#B32346] via-[#A8174E] to-[#500732]  overflow-hidden">
                                                 <motion.div
                                                     animate={{
                                                         scale: [1, 1.2, 1],
@@ -621,7 +584,7 @@ const PublicDonationrequest = () => {
                                                     <motion.button
                                                         whileHover={{ scale: 1.05 }}
                                                         whileTap={{ scale: 0.95 }}
-                                                        className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                                                        className="flex-1 px-4 py-2  bg-gradient-to-r from-[#B32346] via-[#A8174E] to-[#500732]  text-white rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                                                     >
                                                         <FaHeartbeat className="w-4 h-4" />
                                                         Donate Now
