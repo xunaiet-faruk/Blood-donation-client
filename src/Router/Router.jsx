@@ -1,4 +1,3 @@
-// Router/Router.jsx
 import { createBrowserRouter } from "react-router-dom";
 import Mainlayout from "../layout/Mainlayout";
 import Home from "../component/Homepages/Home";
@@ -16,6 +15,11 @@ import AdminContentWrite from "../Dashboard/AdminDashboard/AdminContentWrite";
 import AdminContenManagment from "../Dashboard/AdminDashboard/AdminContenManagment";
 import AssignDonationreq from "../Dashboard/VolunteerDashboard/AssignDonationreq";
 import RoleBasedRoute from "../Authentication/RolebaseRoute";
+import PublicDonationrequest from "../component/Homepages/Publicdonationreq/PublicDonationrequest";
+import Privateroute from "./Privateroute";
+import SearchDonors from "../component/Homepages/FindDonar/SearchDonors";
+import Blog from "../component/Homepages/Blogsection/Blog";
+
 
 export const router = createBrowserRouter([
     {
@@ -26,6 +30,18 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <Home />
+            },
+            {
+                path: "blog",
+                element: <Blog/>
+            },
+            {
+                path: "publicSeeDonor",
+                element:<Privateroute><PublicDonationrequest/> </Privateroute>
+            },
+            {
+                path: "searchDonor",
+                element:<Privateroute><SearchDonors/> </Privateroute>
             },
             {
                 path: "register",
@@ -40,22 +56,22 @@ export const router = createBrowserRouter([
     {
         path: "/dashboard",
         element: (
-            <RoleBasedRoute allowedRoles={['admin', 'volunteer', 'donor']}>  {/* 🔥 সবাইকে অনুমতি দিন */}
+            <RoleBasedRoute allowedRoles={['admin', 'volunteer', 'donor']}>  
                 <DasboardLayout />
             </RoleBasedRoute>
         ),
         children: [
-            // ড্যাশবোর্ড হোম - role অনুযায়ী আলাদা কন্টেন্ট দেখাবে
+            
             {
                 index: true,
                 element: (
                     <RoleBasedRoute allowedRoles={['admin', 'volunteer', 'donor']}>
-                        <Adminhome />  {/* এই কম্পোনেন্টের ভিতরে role check করে আলাদা কন্টেন্ট দেখান */}
+                        <Adminhome />  
                     </RoleBasedRoute>
                 )
             },
 
-            // Profile - সবাই দেখবে
+            
             {
                 path: "profile",
                 element: (
@@ -65,7 +81,7 @@ export const router = createBrowserRouter([
                 ),
             },
 
-            // 🟢 ADMIN ONLY ROUTES
+            //  ADMIN ONLY ROUTES
             {
                 path: "allusers",
                 element: (
@@ -99,7 +115,7 @@ export const router = createBrowserRouter([
                 )
             },
 
-            // 🟢 VOLUNTEER ONLY ROUTES
+            //  VOLUNTEER ONLY ROUTES
             {
                 path: "assigned-donation-requests",
                 element: (
@@ -109,7 +125,7 @@ export const router = createBrowserRouter([
                 )
             },
 
-            // 🟢 DONOR ONLY ROUTES
+            //  DONOR ONLY ROUTES
             {
                 path: "donation-requests",
                 element: (
