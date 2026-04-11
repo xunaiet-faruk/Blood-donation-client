@@ -1,16 +1,84 @@
-# React + Vite
+# 🩸 Blood Donation Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack blood donation platform that connects donors, volunteers, and admins to manage blood donation requests efficiently in real time.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌐 Live Links
 
-## React Compiler
+- 🔴 Live Website: https://blood-donation-web-2b177.web.app  
+- 🟢 Server API: https://blood-donation-server-eight-mu.vercel.app  
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 👤 Role-Based System
+- Admin, Donor, Volunteer authentication
+- Secure login system with protected routes
+
+### 🩸 Donor Features
+- Create blood donation requests
+- Update and track donation requests
+- Search donors by blood group
+
+### 🤝 Volunteer Features
+- View assigned donation requests
+- Update request status in real time
+
+### 🛠️ Admin Features
+- Manage users (block/unblock)
+- Assign roles to users
+- Monitor donation analytics
+
+### 🌍 Public Features
+- Searchable donor directory
+- Real-time request updates
+- Responsive UI with smooth animations
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- React.js (Vite)
+- Tailwind CSS
+- Axios
+- Framer Motion
+- Firebase Authentication
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+
+---
+
+## ⚙️ How to Run This Project Locally
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/xunaiet-faruk/Blood-donation-client.git
+
+
+2. Go to project folder
+cd Blood-donation-client
+3. Install dependencies
+npm install
+4. Setup environment variables (Server Side)
+
+Create a .env file inside the server folder:
+
+USER_NAME=your_database_username
+USER_PASSWORD=your_database_password
+PORT=5000
+
+
+5. Run frontend project
+npm run dev
+
+6. Run backend server
+cd server
+
+npm install
+npm start

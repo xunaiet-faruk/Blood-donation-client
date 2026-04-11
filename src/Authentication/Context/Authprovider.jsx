@@ -56,12 +56,12 @@ const Authprovider = ({ children }) => {
             setUser(currentuser);
 
             if (currentuser?.email) {
-                // localStorage থেকে role চেক করুন
+               
                 const storedRole = localStorage.getItem('userRole');
                 if (storedRole) {
                     setUserRole(storedRole);
                 } else {
-                    // না থাকলে MongoDB থেকে fetch করুন
+                    
                     await fetchUserRole(currentuser.email);
                 }
             } else {
