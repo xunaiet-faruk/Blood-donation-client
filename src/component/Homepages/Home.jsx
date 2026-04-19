@@ -2,6 +2,8 @@ import React from 'react';
 import Banner from './Banner';
 import OurMission from './OurMission';
 import AboutDonation from './AboutDonation';
+import TestimonialsSection from './TestimonialsSection';
+
 
 const Home = () => {
     return (
@@ -10,6 +12,8 @@ const Home = () => {
             
             <OurMission/>
             <AboutDonation/>
+            <TestimonialsSection/>
+            
         </div>
     );
 };
