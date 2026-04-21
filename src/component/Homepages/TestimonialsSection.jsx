@@ -14,12 +14,10 @@ import {
     FaAward,
     FaPlay,
     FaPause,
-    FaTint  // Added FaTint as an alternative
+    FaTint  
 } from 'react-icons/fa';
 
-// Alternative import if GiBloodDrop doesn't work, use this instead:
-// import { TbDroplet } from 'react-icons/tb';
-// Or use FaTint from react-icons/fa
+
 
 const TestimonialsSectionV2 = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -185,7 +183,7 @@ const TestimonialsSectionV2 = () => {
                                                 className="relative w-48 h-48 md:w-64 md:h-64 rounded-full object-cover border-4 border-white shadow-2xl mx-auto"
                                             />
                                             <motion.div
-                                                className="absolute -bottom-4 -right-4 bg-gradient-to-br from-red-500 to-red-700 rounded-full p-3 shadow-lg"
+                                                className="absolute -bottom-4 -right-4 bg-gradient-to-br  bg-gradient-to-r from-[#B32346] via-[#A8174E] to-[#500732] rounded-full p-3 shadow-lg"
                                                 whileHover={{ scale: 1.1, rotate: 360 }}
                                                 transition={{ duration: 0.5 }}
                                             >
@@ -198,7 +196,7 @@ const TestimonialsSectionV2 = () => {
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{ delay: 0.4, type: "spring" }}
-                                            className="absolute top-0 left-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg"
+                                            className="absolute top-0 left-0  bg-gradient-to-r from-[#B32346] via-[#A8174E] to-[#500732] text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg"
                                         >
                                             {testimonials[activeIndex].badge}
                                         </motion.div>
@@ -220,7 +218,7 @@ const TestimonialsSectionV2 = () => {
                                                 initial={{ x: -20, opacity: 0 }}
                                                 animate={{ x: 0, opacity: 1 }}
                                                 transition={{ delay: 0.6 }}
-                                                className="bg-white/10 rounded-lg p-3 backdrop-blur-sm"
+                                                className="bg-white/20 rounded-lg p-3 backdrop-blur-sm"
                                             >
                                                 <div className="flex items-center justify-between">
                                                     <span className="text-black">Donations</span>

@@ -95,7 +95,6 @@ const Banner = () => {
                             </div>
                         </motion.div>
 
-                        {/* CTA Button */}
                         <motion.button
                             className="relative overflow-hidden px-10 py-4 rounded-full text-white font-bold text-lg
                          bg-gradient-to-r from-[#B32346] via-[#A8174E] to-[#500732] 
