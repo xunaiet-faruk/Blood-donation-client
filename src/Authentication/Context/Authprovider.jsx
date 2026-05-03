@@ -49,29 +49,41 @@ const Authprovider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
+     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentuser) => {
             setUser(currentuser);
 
             if (currentuser?.email) {
-               
-                const storedRole = localStorage.getItem('userRole');
-                if (storedRole) {
-                    setUserRole(storedRole);
-                } else {
-                    
-                    await fetchUserRole(currentuser.email);
+                try {
+                    const response = await axios.get(`/register/${currentuser.email}`);
+                    if (response.data) {
+                        const role = response.data.role || 'donor';
+                        setUserRole(role);
+                        localStorage.setItem('userRole', role);
+                        console.log("User role set from backend:", role);
+                    } else {
+                        setUserRole('donor');
+                        localStorage.setItem('userRole', 'donor');
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role:", error);
+                    const storedRole = localStorage.getItem('userRole');
+                    if (storedRole) {
+                        setUserRole(storedRole);
+                    } else {
+                        setUserRole('donor');
+                    }
                 }
             } else {
                 setUserRole(null);
+                localStorage.removeItem('userRole');
             }
 
-            console.log("current user", currentuser);
             setLoading(false);
         });
 
         return unsubscribe;
-    }, []);
+    }, [axios]); 
 
     const updateUser = (name, photo, group, upazila, district) => {
         return updateProfile(auth.currentUser, {

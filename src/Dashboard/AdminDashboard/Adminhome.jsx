@@ -152,7 +152,6 @@ const Adminhome = () => {
             .catch((err) => console.error("Failed to load data:", err));
     }, [axios]);
 
-    // Role-based content rendering
     const renderContent = () => {
         switch (userRole) {
             case 'admin':
