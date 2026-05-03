@@ -1,4 +1,3 @@
-// Authentication/Context/Authcontext.jsx
 import React, { useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -11,7 +10,7 @@ const Authprovider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [userRole, setUserRole] = useState(null); // 🆕 role জন্য আলাদা state
+    const [userRole, setUserRole] = useState(null);
 
     const signin = (email, password) => {
         setLoading(true);
@@ -25,7 +24,7 @@ const Authprovider = ({ children }) => {
 
     const logout = async () => {
         setLoading(true);
-        localStorage.removeItem('userRole'); // role remove করুন
+        localStorage.removeItem('userRole'); 
         setUserRole(null);
         return signOut(auth);
     };
@@ -35,19 +34,18 @@ const Authprovider = ({ children }) => {
         return signInWithPopup(auth, provider);
     };
 
-    // 🔥 ইউজারের role MongoDB থেকে fetch করুন
     const fetchUserRole = async (email) => {
         try {
             const response = await axios.get(`/register/${email}`);
             if (response.data) {
-                const role = response.data.role || 'donor'; // ডিফল্ট role donor
+                const role = response.data.role || 'donor'; 
                 setUserRole(role);
-                localStorage.setItem('userRole', role); // localStorage এ সংরক্ষণ
+                localStorage.setItem('userRole', role); 
                 console.log("User role fetched:", role);
             }
         } catch (error) {
             console.error("Error fetching user role:", error);
-            setUserRole('donor'); // error হলে donor সেট করুন
+            setUserRole('donor'); 
         }
     };
 
@@ -87,14 +85,14 @@ const Authprovider = ({ children }) => {
 
     const userInfo = {
         user,
-        userRole, // 🆕 role এক্সপোর্ট করুন
+        userRole, 
         loading,
         signin,
         signup,
         logout,
         google,
         updateUser,
-        fetchUserRole // 🆕 role fetch ফাংশন
+        fetchUserRole 
     };
 
     return (

@@ -26,7 +26,6 @@ import { MdEmergency } from 'react-icons/md';
 import { BsFillHeartPulseFill } from 'react-icons/bs';
 import Useaxios from '../../../Hooks/Useaxios';
 
-// Statistics data
 const stats = [
     {
         id: 1,
@@ -67,7 +66,6 @@ const Blog = () => {
     const [expandedPost, setExpandedPost] = useState(null);
     const axios = Useaxios();
 
-    // Animation variants
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -111,7 +109,6 @@ const Blog = () => {
         }
     };
 
-    // Fetch blog posts from API
     useEffect(() => {
         const fetchBlogPosts = async () => {
             try {

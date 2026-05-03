@@ -67,7 +67,6 @@ const DonationView = ({ viewingRequest, setViewingRequest }) => {
     );
 };
 
-// Component for each detail row
 const DetailRow = ({ label, value, valueClass }) => (
     <div className="flex justify-between bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition">
         <span className="font-semibold text-gray-700">{label}:</span>

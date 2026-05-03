@@ -41,7 +41,7 @@ const roleIcon = (role) => {
     }
 };
 
-// Table animation variants - শুধু এনিমেশন যোগ করছি
+
 const tableVariants = {
     hidden: { opacity: 0 },
     visible: {

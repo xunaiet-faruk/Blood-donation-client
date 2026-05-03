@@ -47,7 +47,7 @@ const MyDonationRequests = () => {
     }, [user?.email, axios]);
 
 
-    //Delete data 
+ 
     const handleDeleteRequest = async (id) => {
         try {
             const response = await axios.delete(
@@ -86,7 +86,7 @@ const MyDonationRequests = () => {
         }
     };
 
-    // Edit function data 
+   
 
     const handleEditRequest = (req) => {
         
@@ -125,11 +125,10 @@ const handleViewDetails = (id) => {
 
 
 
-    // Filtered requests
+ 
     const filteredRequests =
         filter === "all" ? requests : requests.filter((r) => r.status === filter);
 
-    // Pagination
     const indexOfLast = currentPage * requestsPerPage;
     const indexOfFirst = indexOfLast - requestsPerPage;
     const currentRequests = filteredRequests.slice(indexOfFirst, indexOfLast);

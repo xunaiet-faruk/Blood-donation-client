@@ -24,7 +24,7 @@ const statusColor = (status) => {
     }
 };
 
-// Blood group color mapping
+
 const bloodGroupColor = (group) => {
     const colors = {
         'A+': 'bg-red-100 text-red-800',
@@ -330,7 +330,7 @@ const AllBlooddonationRequest = () => {
                 });
 
                 if (confirmResult.isConfirmed) {
-                    // Show loading
+                 
                     Swal.fire({
                         title: 'Assigning volunteer...',
                         allowOutsideClick: false,
@@ -339,7 +339,7 @@ const AllBlooddonationRequest = () => {
                         }
                     });
 
-                    // Make API call to assign volunteer
+                   
                     const assignResponse = await axios.put(`/blood-request/${request._id}/assign-volunteer`, {
                         volunteerId: selectedVolunteer._id,
                         volunteerName: selectedVolunteer.name,
@@ -347,7 +347,7 @@ const AllBlooddonationRequest = () => {
                     });
 
                     if (assignResponse.data.success) {
-                        // Update local state
+                     
                         setRequests(requests.map(req =>
                             req._id === request._id
                                 ? { ...req, assignedVolunteer: assignResponse.data.data.assignedVolunteer }

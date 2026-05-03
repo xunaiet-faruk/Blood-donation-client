@@ -50,7 +50,6 @@ const AdminContentWrite = () => {
         e.preventDefault();
         const form = e.target;
 
-        // Get form data
         const title = form.title.value;
         const description = form.description.value;
         const date = form.date.value;
@@ -58,7 +57,7 @@ const AdminContentWrite = () => {
         const tags = form.tags.value;
         const status = form.status.value;
 
-        // Create data object
+     
         const contentData = {
             title,
             description,

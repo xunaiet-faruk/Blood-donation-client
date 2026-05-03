@@ -85,7 +85,7 @@ const AboutDonation = () => {
                                             duration: 2,
                                             repeat: Infinity,
                                             ease: "easeInOut",
-                                            delay: i * 0.3, // slight delay for each card
+                                            delay: i * 0.3, 
                                         }}
                                         className="w-12 h-12 flex items-center justify-center text-xl text-[#B32346] bg-[#B32346]/10 rounded-xl"
                                     >

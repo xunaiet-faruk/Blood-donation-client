@@ -54,13 +54,12 @@ const PublicDonationrequest = () => {
         fetchRequestData();
     }, [axios]);
 
-    // সার্চ ফাংশন - শুধু blood group দিয়ে সার্চ করবে
     const handleSearch = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
 
         if (query.trim() === '') {
-            setSearchResults(requestData); // খালি থাকলে সব দেখাও
+            setSearchResults(requestData); 
         } else {
             const filtered = requestData.filter(request =>
                 request.bloodGroup?.toLowerCase().includes(query.toLowerCase())
@@ -69,13 +68,13 @@ const PublicDonationrequest = () => {
         }
     };
 
-    // সার্চ রিসেট
+ 
     const clearSearch = () => {
         setSearchQuery('');
         setSearchResults(requestData);
     };
 
-    // Animation variants
+   
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {

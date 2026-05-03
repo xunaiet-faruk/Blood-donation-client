@@ -22,9 +22,7 @@ const VolunteerDashboard = () => {
         }
     };
 
-    // Volunteer শুধু status update করতে পারবে (inprogress, done)
     const handleStatusUpdate = async (id, newStatus) => {
-        // Similar to your existing handleStatusChange but with limited options
     };
 
     return (

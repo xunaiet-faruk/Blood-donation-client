@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 import Useaxios from '../../Hooks/Useaxios';
 import { Authcontext } from '../../Authentication/Context/Authcontext';
 
-// Status color function
 const statusColor = (status) => {
     switch (status?.toLowerCase()) {
         case "pending":
@@ -37,7 +36,7 @@ const AssignDonationreq = () => {
     const fetchAssignedRequests = async () => {
         try {
             setLoading(true);
-            // সব রিকোয়েস্ট এনে ফিল্টার করি ইমেইল দিয়ে
+           
             const response = await axios.get('/blood-request');
             const filtered = response.data.filter(req =>
                 req.assignedVolunteer?.volunteerEmail === user.email
@@ -70,7 +69,6 @@ const AssignDonationreq = () => {
         });
     };
 
-    // Update Status (Volunteer can change to: inprogress, done, canceled)
     const handleStatusChange = async (id, currentStatus) => {
         try {
             const statusMap = {

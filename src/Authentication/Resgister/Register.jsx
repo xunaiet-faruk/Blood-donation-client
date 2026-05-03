@@ -64,7 +64,7 @@ const Register = memo(() => {
         const upazila = form.upazila.value;
         const district = form.district.options[form.district.selectedIndex].text;
 
-        // Validation
+        
         if (!name || !email || !phone || !password || !photo || !group || !upazila || !district) {
             Swal.fire({
                 title: "Error!",

@@ -1,199 +1,238 @@
 # 🩸 Blood Donation Web Application
 
-A full-stack **Blood Donation Platform** that connects donors, volunteers, and admins to efficiently manage blood donation requests in real time.
+A comprehensive Blood Donation Platform designed to connect donors, volunteers, and admins to manage life-saving blood requests in real-time.
 
 ---
 
 ## 🌐 Live Links
 
-* 🔴 **Live Website:** https://blood-donation-web-2b177.web.app
-* 🟢 **Server API:** https://blood-donation-server-eight-mu.vercel.app
+| Platform | URL |
+|----------|-----|
+| **Live Website** | [https://blood-donation-web-2b177.web.app](https://blood-donation-web-2b177.web.app) |
+| **Server API** | [https://blood-donation-server-eight-mu.vercel.app](https://blood-donation-server-eight-mu.vercel.app) |
 
 ---
 
-## 📌 Overview
+## 📌 Project Overview
 
-This platform enables seamless coordination between **Donors**, **Volunteers**, and **Admins**:
-
-* Donors can create and manage blood donation requests
-* Volunteers handle and update request statuses
-* Admins manage users and monitor overall system activity
+This platform bridges the gap between those in need and those willing to help. It features a robust **Role-Based Access Control (RBAC)** system ensuring that Admins, Volunteers, and Donors have tailored interfaces to manage requests, users, and content.
 
 ---
 
-## ✨ Features
+## 🔑 Test Credentials
 
-### 👤 Role-Based System
-
-* Three user roles: **Admin, Donor, Volunteer**
-* Secure authentication using Firebase
-* Protected routes based on user roles
-
----
-
-### 🩸 Donor Features
-
-* Create blood donation requests
-* Update and track request status
-* Search donors by blood group
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | xunaiet28@gmail.com | 123456 |
+| **Volunteer** | mayajahed67@gmail.com | 1234567 |
+| **Donor** | j23ietf@gmail.com | fdasfdasf |
 
 ---
 
-### 🤝 Volunteer Features
+## ✨ Key Features
 
-* View assigned donation requests
-* Update request status in real time
+### 👑 Admin Dashboard
 
----
+| Feature | Description |
+|---------|-------------|
+| **Analytics** | Visual charts for donor statistics and request status |
+| **User Management** | Ability to block/unblock users, delete accounts, or change roles |
+| **Request Oversight** | Full control over blood requests (assigning volunteers, changing status) |
+| **Content Management** | Full-featured blog/content creation and deletion |
 
-### 🛠️ Admin Features
+### 🤝 Volunteer Dashboard
 
-* Manage users (block/unblock)
-* Assign roles to users
-* Monitor donation activities
+| Feature | Description |
+|---------|-------------|
+| **Assignment Tracking** | View requests specifically assigned by the Admin |
+| **Status Management** | Update request status to In-progress, Done, or Canceled |
+| **Data Access** | Detailed view of requester information for coordination |
 
----
+### 🩸 Donor Dashboard
 
-### 🌍 Public Features
-
-* Searchable donor directory
-* Real-time updates
-* Fully responsive UI with smooth animations
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-* React.js (Vite)
-* Tailwind CSS
-* Axios
-* Framer Motion
-* Firebase Authentication
-
-### Backend
-
-* Node.js
-* Express.js
-* MongoDB
+| Feature | Description |
+|---------|-------------|
+| **Request Creation** | Simple form to post urgent blood needs |
+| **Personal Tracking** | Manage and monitor the status of personal requests |
+| **Profile Control** | Keep contact information and blood group data up to date |
 
 ---
 
-## 📦 Run Locally
+## 🛠️ Technology Stack
 
-### 🔹 Frontend Setup
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | React.js (Vite), Tailwind CSS, Framer Motion, Axios |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB |
+| **Auth/Security** | Firebase Authentication, JSON Web Tokens (JWT) |
+| **UI Components** | SweetAlert2, React Router DOM |
 
-#### 1️⃣ Clone client repository
+---
 
-```bash id="7r1c9y"
+## 🚀 Local Setup Guide
+
+### 1️⃣ Frontend Setup
+
+**Clone the Repository:**
+
+```bash
 git clone https://github.com/xunaiet-faruk/Blood-donation-client
 cd Blood-donation-client
-```
-
-#### 2️⃣ Install dependencies
-
-```bash id="3m1l8g"
 npm install
-```
 
-#### 3️⃣ Run frontend
 
-```bash id="d8pwk2"
+Configure API Instance:
+
+Navigate to your Axios configuration file (e.g., src/hooks/Useaxios.jsx) and ensure the baseURL points to your local server:
+
+# import axios from 'axios';
+# import React, { useMemo } from 'react';
+
+# const Useaxios = () => {
+#     const axiosInstance =useMemo(()=>{
+#         return axios.create({
+#             baseURL: 'http://localhost:5000'
+#             // baseURL: 'https://blood-donation-server-eight-mu.vercel.app'
+          
+#         })
+#     },[])
+#     return axiosInstance;
+# };
+
+# export default Useaxios;
+
+Run the App:
+
+bash
 npm run dev
-```
+Frontend will run on: http://localhost:5173
 
-Frontend will run on:
+2️⃣ Backend Setup
+Clone the Repository:
 
-```id="6ov1hx"
-http://localhost:5173
-```
-
----
-
-### 🔹 Backend Setup
-
-#### 1️⃣ Clone server repository
-
-```bash id="l6q9tt"
+bash
 git clone https://github.com/xunaiet-faruk/Blood-donation-server
 cd Blood-donation-server
-```
-
-#### 2️⃣ Install dependencies
-
-```bash id="3wq7sz"
 npm install
-```
+Environment Variables:
 
-#### 3️⃣ Setup environment variables
+Create a .env file in the root directory and add your MongoDB credentials:
 
-Create a `.env` file in the root directory:
-
-```env id="q5v0ox"
+env
+USER_NAME=your_mongodb_username
+USER_PASSWORD=your_mongodb_password
 PORT=5000
-USER_NAME=your_database_username
-USER_PASSWORD=your_database_password
-```
+Run the Server:
 
-#### 4️⃣ Run backend server
-
-```bash id="v7o4h3"
+bash
 npm start
-```
+For development with auto-reload:
 
-Backend will run on:
+bash
+npm run dev
+Backend will run on: http://localhost:5000
 
-```id="9t8z2r"
-http://localhost:5000
-```
+📋 Database Structure
+Collection	Purpose
+users	User profiles, roles (Admin/Volunteer/Donor), and status (Active/Blocked)
+blood-requests	Details regarding the recipient, location, date, and current status
+contents	Blog posts and informative articles
+volunteer-assignments	Mapping of specific requests to volunteers
+🔗 API Endpoints Overview
+Method	Endpoint	Description	Access
+GET	/register/:email	Get user by email	All
+POST	/register	Create new user	Public
+GET	/users	Get all users	Admin
+PUT	/users/:id	Update user role/status	Admin
+GET	/blood-request	Get all requests	Admin/Volunteer
+POST	/blood-request	Create new request	Donor
+PUT	/blood-request/:id	Update request	Admin/Donor
+DELETE	/blood-request/:id	Delete request	Admin/Donor
+PUT	/blood-request/:id/assign	Assign volunteer	Admin
+GET	/contents	Get all content	Public
+POST	/contents	Create new content	Admin
+DELETE	/contents/:id	Delete content	Admin
+🎨 UI Features
+Smooth Animations - Framer Motion for engaging transitions
 
----
+Responsive Design - Works perfectly on all devices
 
-## 🔗 API Connection (Example)
+Mobile-First Approach - Optimized for mobile experience
 
-```js id="r5x2mk"
-import axios from 'axios';
-import { useMemo } from 'react';
+Beautiful Alerts - SweetAlert2 for user notifications
 
-const useAxios = () => {
-    const axiosInstance = useMemo(() => {
-        return axios.create({
-            // Local server
-            // baseURL: 'http://localhost:5000'
+Loading States - Professional loading indicators
 
-            // Production server
-            baseURL: 'https://blood-donation-server-eight-mu.vercel.app'
-        });
-    }, []);
+Error Handling - Graceful error messages
 
-    return axiosInstance;
-};
+🔒 Security Features
 
-export default useAxios;
-```
+Role-Based Access - Protected routes based on user roles
 
----
+Firebase Auth - Secure authentication system
 
-## ⚠️ Important Notes
+Environment Variables - Secure configuration management
 
-* Always run the backend server before starting the frontend
-* Ensure MongoDB credentials are correctly configured
-* Keep your `.env` file secure and never commit it to version control
-* Update API baseURL when switching between local and production environments
+Block/Unblock System - Blocked users cannot create requests
 
----
+🐛 Common Issues & Solutions
+Issue: Volunteer redirects to home page
+Solution:
 
-## 🚀 Future Improvements
+Ensure user role is properly fetched from database
 
-* Notification system
-* Advanced filtering options
-* Blood request priority system
+Check if volunteer email matches assigned requests
 
----
+Clear localStorage and re-login
 
-## 👨‍💻 Author
+Verify API connection is working
 
-**Junaiet Faruk**
+Issue: API call fails with CORS error
+Solution:
 
----
+Check backend CORS configuration
+
+Ensure backend server is running
+
+Verify API baseURL is correct
+
+🚀 Future Improvements
+Real-time notification system using Socket.io
+
+Email notifications for request updates
+
+Advanced donor filtering options
+
+Blood request priority system (urgent/normal)
+
+Mobile application (React Native)
+
+SMS alerts for urgent requests
+
+Donor rating system
+
+Blood camp management feature
+
+Location-based donor matching using Google Maps
+
+
+
+👨‍💻 Author
+Junaiet Faruk (Xunaiet Faruk)
+
+🌐 GitHub: @xunaiet-faruk
+
+📧 Email: xunaiet28@gmail.com
+
+🙏 Acknowledgments
+Firebase for authentication
+
+MongoDB for database
+
+Vercel for server hosting
+
+Firebase Hosting for client hosting
+
+All contributors and testers
+
