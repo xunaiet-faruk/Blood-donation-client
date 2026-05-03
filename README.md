@@ -25,7 +25,7 @@ This platform bridges the gap between those in need and those willing to help. I
 |------|-------|----------|
 | **Admin** | xunaiet28@gmail.com | 123456 |
 | **Volunteer** | mayajahed67@gmail.com | 1234567 |
-| **Donor** | j23ietf@gmail.com | fdasfdasf |
+| **Donor** | farzan@gmail.com| 123456 |
 
 ---
 
